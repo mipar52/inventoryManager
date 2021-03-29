@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="17192" systemVersion="19G2021" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+    <entity name="Entity" representedClassName="Entity" syncable="YES" codeGenerationType="class"/>
+    <entity name="ScannedData" representedClassName=".ScannedData" syncable="YES" codeGenerationType="class">
+        <attribute name="scannedData" optional="YES" attributeType="String"/>
+    </entity>
+    <entity name="Sheet" representedClassName=".Sheet" syncable="YES" codeGenerationType="class">
+        <attribute name="sheetId" optional="YES" attributeType="String"/>
+        <attribute name="sheetName" attributeType="String"/>
+        <attribute name="sheetSelected" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+        <relationship name="parentCategory" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Spreadsheet" inverseName="sheet" inverseEntity="Spreadsheet"/>
+    </entity>
+    <entity name="Spreadsheet" representedClassName=".Spreadsheet" syncable="YES" codeGenerationType="class">
+        <attribute name="spreadsheetId" attributeType="String"/>
+        <attribute name="spreadsheetName" attributeType="String"/>
+        <attribute name="spreadsheetSelected" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+        <relationship name="sheet" toMany="YES" deletionRule="Nullify" destinationEntity="Sheet" inverseName="parentCategory" inverseEntity="Sheet"/>
+    </entity>
+    <elements>
+        <element name="Entity" positionX="-502.53515625" positionY="-218.35546875" width="128" height="43"/>
+        <element name="ScannedData" positionX="-96.6640625" positionY="-55.03515625" width="128" height="58"/>
+        <element name="Sheet" positionX="24.78515625" positionY="151.46875" width="128" height="103"/>
+        <element name="Spreadsheet" positionX="-304.671875" positionY="65.15234375" width="128" height="103"/>
+    </elements>
+</model>

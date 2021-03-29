@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="17709" systemVersion="20D91" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+    <entity name="ScannedData" representedClassName="ScannedData" syncable="YES" codeGenerationType="class">
+        <attribute name="scannedData" attributeType="String"/>
+    </entity>
+    <entity name="Sheet" representedClassName="Sheet" syncable="YES" codeGenerationType="class">
+        <attribute name="sheetId" attributeType="String"/>
+        <attribute name="sheetName" attributeType="String"/>
+        <attribute name="sheetSelected" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+        <relationship name="parentCategory" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Spreadsheet" inverseName="sheet" inverseEntity="Spreadsheet"/>
+    </entity>
+    <entity name="Spreadsheet" representedClassName="Spreadsheet" syncable="YES" codeGenerationType="class">
+        <attribute name="spreadsheetId" attributeType="String"/>
+        <attribute name="spreadsheetName" attributeType="String"/>
+        <attribute name="spreadsheetSelected" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+        <relationship name="sheet" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Sheet" inverseName="parentCategory" inverseEntity="Sheet"/>
+    </entity>
+    <elements>
+        <element name="ScannedData" positionX="-63" positionY="-18" width="128" height="44"/>
+        <element name="Sheet" positionX="-54" positionY="0" width="128" height="89"/>
+        <element name="Spreadsheet" positionX="-36" positionY="36" width="128" height="89"/>
+    </elements>
+</model>
