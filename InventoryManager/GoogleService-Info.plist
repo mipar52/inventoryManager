@@ -3,21 +3,21 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>976815233995-v7r945sckp27i6s538k8pntqhmcda28q.apps.googleusercontent.com</string>
+	<string>4678728265-7supi88fufo3v8a90rvmt09098113a1c.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.976815233995-v7r945sckp27i6s538k8pntqhmcda28q</string>
+	<string>com.googleusercontent.apps.4678728265-7supi88fufo3v8a90rvmt09098113a1c</string>
 	<key>API_KEY</key>
-	<string>AIzaSyDEc5kBRji0hcY8Ct0c-OJ2dZHVzKqhySo</string>
+	<string>AIzaSyBp2ME20lndkAlBGInV6PaKEFi3nmxH3T8</string>
 	<key>GCM_SENDER_ID</key>
-	<string>976815233995</string>
+	<string>4678728265</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.microblink.BlinkItems</string>
+	<string>com.mipar.inventoryManager</string>
 	<key>PROJECT_ID</key>
-	<string>blinkInventoryManager-289713</string>
+	<string>inventorymanager-309114</string>
 	<key>STORAGE_BUCKET</key>
-	<string>blinkInventoryManager-289713.appspot.com</string>
+	<string>inventorymanager-309114.appspot.com</string>
 	<key>IS_ADS_ENABLED</key>
 	<false></false>
 	<key>IS_ANALYTICS_ENABLED</key>
@@ -29,8 +29,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:976815233995:ios:d23f2b5d64f569cd4c344e</string>
-	<key>DATABASE_URL</key>
-	<string>https://blinkInventoryManager-289713.firebaseio.com</string>
+	<string>1:4678728265:ios:1a5f6de4124cc9327d9d98</string>
 </dict>
 </plist>
