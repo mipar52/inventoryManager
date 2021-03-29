@@ -35,18 +35,9 @@ class ScanDetailsController: UIViewController {
     }
     
     var currentSheetforUploadDetails : String?
-    let defaultSheetId = "1bRmLdawOufumtqaw24tjoKluBXYTY64aHGEjlsZRy8M"
-    let defaults = UserDefaults.standard
     var couldNotSend : Bool?
-    let savedSheetId = UserDefaults.standard.object(forKey: "lastSheetId") as? String ?? "1bRmLdawOufumtqaw24tjoKluBXYTY64aHGEjlsZRy8M"
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
-
-        if currentSheetforUploadDetails != nil {
-                  defaults.set(currentSheetforUploadDetails, forKey: "lastSheetId")
-         }
-    }
+    let defaults = UserDefaults.standard
 
     @IBAction func uploadPressed(_ sender: UIButton) {
  

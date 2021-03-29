@@ -73,8 +73,8 @@ class SheetController: UITableViewController {
         
         if spreadsheet.spreadsheetSelected == true {
             spreadsheetCell.accessoryType = .checkmark
-            spreadsheetCell.textLabel?.textColor = #colorLiteral(red: 0.4666666687, green: 0.7647058964, blue: 0.2666666806, alpha: 1)
-            spreadsheetCell.tintColor = #colorLiteral(red: 0.4666666687, green: 0.7647058964, blue: 0.2666666806, alpha: 1)
+            spreadsheetCell.textLabel?.textColor = #colorLiteral(red: 0.5843137503, green: 0.8235294223, blue: 0.4196078479, alpha: 1)
+            spreadsheetCell.tintColor = #colorLiteral(red: 0.5843137503, green: 0.8235294223, blue: 0.4196078479, alpha: 1)
         } else {
             spreadsheetCell.accessoryType = .none
             spreadsheetCell.textLabel?.textColor = .white

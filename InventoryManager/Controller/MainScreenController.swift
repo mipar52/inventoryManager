@@ -14,17 +14,20 @@ import Toast_Swift
 
 class MainScreenController: UIViewController {
     
+    @IBOutlet weak var signInButton: UIButton!
+    
     let sheetBrain = SheetBrain()
     let dbBrain = DataBaseBrain()
     let utils = Utils()
-    let key = "sRwAAAEOY29tLm1pbGFuLnRlc3Sbmd5ryldq66od59HF95aRmzCT81SZbKuaDk+L/Fe22MW5ySeVfPnL7Qw9tx+w8LZtR71neXF/+aDOLdQw/2RSUpGfLr9GKlaiUXuukP4dRuUNq7hURaBvouwPsZ+bV1oPlZSS"
     
+    let key = "key-obtained-from-Microblink"
     var barcodeRecognizer : MBBarcodeRecognizer?
     
-    private let scopes = [kGTLRAuthScopeSheetsSpreadsheets, kGTLRAuthScopeSheetsDrive]
-    private let driveScopes = [kGTLRAuthScopeSheetsDrive]
     private let service = GTLRSheetsService()
     private let driveService = GTLRDriveService()
+    private let scopes = [kGTLRAuthScopeSheetsSpreadsheets, kGTLRAuthScopeSheetsDrive]
+    private let driveScopes = [kGTLRAuthScopeSheetsDrive]
+    
     let defaults = UserDefaults.standard
     var resultSucess: Bool?
     var infoForVC : String?
@@ -32,8 +35,6 @@ class MainScreenController: UIViewController {
     var observer : NSObjectProtocol?
     var currentUser = "email"
     var isLicenseValid = true
-    @IBOutlet weak var signInButton: UIButton!
-    
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -41,9 +42,7 @@ class MainScreenController: UIViewController {
         MBMicroblinkSDK.shared().setLicenseKey(key) { (error) in
             self.isLicenseValid = false
         }
-        
-        //MBMicroblinkSDK.shared().showLicenseKeyTimeLimitedWarning = false
-        
+            
         GIDSignIn.sharedInstance().delegate = self
         GIDSignIn.sharedInstance().uiDelegate = self
         GIDSignIn.sharedInstance().scopes = scopes
@@ -81,10 +80,8 @@ class MainScreenController: UIViewController {
         observer = NotificationCenter.default.addObserver(forName: NSNotification.Name(rawValue: "uploadPressed"), object: nil, queue: OperationQueue.main) { (notification) in
             
             let vc = notification.object as! OverlayView
-            print("Handling press button actions....")
-            print("Data sent is: \(vc.dataSent)")
             
-            var splitResults = vc.results?.components(separatedBy: ";")
+            let splitResults = vc.results?.components(separatedBy: ";")
            
             let data : Array<Any>.ArrayLiteralElement = splitResults
 
@@ -95,9 +92,8 @@ class MainScreenController: UIViewController {
                         self.utils.addToast(messageColor: .black, backgroundColor: #colorLiteral(red: 0.9098039269, green: 0.4784313738, blue: 0.6431372762, alpha: 1), message: "Upload failed.\nSaving the data...", vc: barcodeOverlayViewController)
     
                     } else if sentBool {
+                        print("Sucess!")
                         self.utils.addToast(messageColor: .black, backgroundColor: #colorLiteral(red: 0.4, green: 0.8509803922, blue: 0.7882352941, alpha: 1), message: "Upload sucessful!", vc: barcodeOverlayViewController)
-                        print("Fail!")
-    
                         }
                 }
 
@@ -118,24 +114,18 @@ class MainScreenController: UIViewController {
             self.utils.showAlert(title: "Error", message: "Can't access the SDK!\nCheck if you've entered the correct license key..", vc: self)
         }
     }
-    
-    
-    let signInString = "Sign in"
-    let signOutString = "Sign out"
-    
+
     @IBAction func signInPressed(_ sender: UIButton) {
         print("Sign in pressed")
         
         if self.service.authorizer == nil{
         GIDSignIn.sharedInstance()?.signIn()
             print("signing in....")
-        }
-
-        if (self.service.authorizer != nil) {
+        } else if (self.service.authorizer != nil) {
             GIDSignIn.sharedInstance()?.signOut()
             self.service.authorizer = nil
             
-            sender.setTitle(signInString, for: UIControl.State.normal)
+            sender.setTitle("Sign in", for: UIControl.State.normal)
             sender.setTitleColor(#colorLiteral(red: 0.2745098174, green: 0.4862745106, blue: 0.1411764771, alpha: 1), for: UIControl.State.normal)
             print("signing out....")
         }
@@ -165,7 +155,6 @@ class MainScreenController: UIViewController {
 extension MainScreenController: MBBarcodeOverlayViewControllerDelegate, GIDSignInDelegate, GIDSignInUIDelegate  {
 
       func barcodeOverlayViewControllerDidFinishScanning(_ barcodeOverlayViewController: MBBarcodeOverlayViewController, state: MBRecognizerResultState) {
-            /** This is done on background thread */
         
         let autoUpload = defaults.object(forKey: "isuploadAuto") as? Bool ?? false
         barcodeOverlayViewController.recognizerRunnerViewController?.pauseScanning()
@@ -187,7 +176,7 @@ extension MainScreenController: MBBarcodeOverlayViewControllerDelegate, GIDSignI
                 self.infoForVC = message
                 
                 self.showHalfVC(blinkIdOverlayViewController: barcodeOverlayViewController)
-                }
+                    }
                 } else if autoUpload == true {
                     
                     DispatchQueue.main.async {
@@ -202,12 +191,11 @@ extension MainScreenController: MBBarcodeOverlayViewControllerDelegate, GIDSignI
                     
                     self.utils.run(after: 3) {
                         barcodeOverlayViewController.recognizerRunnerViewController?.resumeScanningAndResetState(true)
-                        //resumescanningandresetstate
                     }
                 }
-                    }
             }
         }
+    }
 
     func barcodeOverlayViewControllerDidTapClose(_ barcodeOverlayViewController: MBBarcodeOverlayViewController) {
             self.dismiss(animated: true, completion: nil)
@@ -262,15 +250,9 @@ extension MainScreenController: MBBarcodeOverlayViewControllerDelegate, GIDSignI
 
         }
     }
+
 extension MainScreenController : UIViewControllerTransitioningDelegate {
     func presentationController(forPresented presented: UIViewController, presenting: UIViewController?, source: UIViewController) -> UIPresentationController? {
         return PresentationController(presentedViewController: presented, presenting: presenting)
     }
-}
-extension UINavigationController {
-  func popToViewController(ofClass: AnyClass, animated: Bool = true) {
-    if let vc = viewControllers.last(where: { $0.isKind(of: ofClass) }) {
-      popToViewController(vc, animated: animated)
-    }
-  }
 }

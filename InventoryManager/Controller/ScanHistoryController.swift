@@ -60,7 +60,7 @@ class ScanHistoryController: UITableViewController, DataDeleteDelegate  {
                 self.utils.showSpinner(message: "Uploading 1 item..", vc: self)
              
             } else if self.dataArray.count > 1 {
-                self.utils.showSpinner(message: "Uploading \(self.dataArray.count) InventoryManager..", vc: self)
+                self.utils.showSpinner(message: "Uploading \(self.dataArray.count) items..", vc: self)
                 
             }
             
@@ -71,7 +71,7 @@ class ScanHistoryController: UITableViewController, DataDeleteDelegate  {
                 let item = element.scannedData
           
                 let parsedItem = item?.components(separatedBy: ";")
-                print("Current parsed InventoryManager : \(String(describing: parsedItem))")
+                print("Current parsed items : \(String(describing: parsedItem))")
                 
                 multiResults.append(parsedItem!)
                 for result in multiResults {
@@ -100,7 +100,7 @@ class ScanHistoryController: UITableViewController, DataDeleteDelegate  {
                         }
                     } else {
                         self.dismiss(animated: true) {
-                        self.utils.showAlert(title: "Error", message: "Could not upload InventoryManager to sheet! \nSee if there is a secure connection to the internet or if you are properly signed into your Google account!", vc: self)
+                        self.utils.showAlert(title: "Error", message: "Could not upload items to sheet! \nSee if there is a secure connection to the internet or if you are properly signed into your Google account!", vc: self)
                         }
                     }
                 }
