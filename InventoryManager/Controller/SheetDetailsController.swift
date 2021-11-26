@@ -46,35 +46,20 @@ class SheetDetailsController: UIViewController {
         
         let isSelected = true
         let name = "\"\(String(describing: selectedSheet!.spreadsheetName!))\"\n(\(currentSheetName!))"
-   
-        NotificationCenter.default.post(name: .sheetIdNotificationKey, object: self)
-        NotificationCenter.default.post(name: NSNotification.Name(rawValue: "sheetBrainId"), object: self)
-        NotificationCenter.default.post(name: .sheetIdNotificationKey, object: self)
-        NotificationCenter.default.post(name: NSNotification.Name(rawValue: "sheetBrainId"), object: self)
-
-        self.navigationController!.popToRootViewController(animated: true)
-        self.utils.addToastToNC(messageColor: .black, backgroundColor: #colorLiteral(red: 0.5843137503, green: 0.8235294223, blue: 0.4196078479, alpha: 1), message: "Selected Spreadsheet\n\(name)!", nc: self.navigationController!)
-        self.navigationController?.navigationItem.backBarButtonItem?.isEnabled = true
-        self.navigationController!.interactivePopGestureRecognizer!.isEnabled = true
+        defaults.set(name, forKey: K.uDefaults.toastSheetName)
+        defaults.set(selectedSheet?.spreadsheetId, forKey: K.uDefaults.spreadsheetId)
+        defaults.set(currentSheetName, forKey: K.uDefaults.sheetName)
+        self.navigationController?.popToRootViewController(animated: true)
+        self.utils.addToast(backgroundColor: K.colors.neutral, message: "Selected Spreadsheet\n\(name)!", vc: self.navigationController!)
         SheetDetailsController.self.selectedDelegate?.selectedSheet(selected: isSelected)
     }
     
     
     @IBAction func deleteSheetPressed(_ sender: UIButton) {
-        
-        let alert = UIAlertController(title: "Delete Spreadsheet?", message: "", preferredStyle: .alert)
-        let deleteSheetFromApp = UIAlertAction(title: "Yes", style: .default) { (action) in
+        self.utils.addTwoActionAlert(title: K.popupStrings.alert.deleteSpreadsheet, message: "", actionTitle: K.popupStrings.alert.yes, vc: self) { action in
             SheetDetailsController.self.sheetDeleteDelegate?.deleteSheet(sheet: self.sheetArray)
             self.navigationController?.popViewController(animated: true)
         }
-        
-        let cancel = UIAlertAction(title: "No", style: .default) { (action) in
-            self.navigationController?.popViewController(animated: true)
-          }
-        alert.addAction(deleteSheetFromApp)
-        alert.addAction(cancel)
-        
-        present(alert, animated: true, completion: nil)
     }
     
     @IBAction func sheetURLPressed(_ sender: UIBarButtonItem) {
@@ -82,7 +67,7 @@ class SheetDetailsController: UIViewController {
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == "sheetDetails" {
+        if segue.identifier == K.segues.sheetDetails {
             let destVC = segue.destination as! SheetDetailTableController
             destVC.spreadSheetName = selectedSheet?.spreadsheetName
             destVC.sheetId = selectedSheet?.spreadsheetId
@@ -93,7 +78,7 @@ class SheetDetailsController: UIViewController {
     //MARK: - Sheet Info
     func copySheetUrl() {
             UIPasteboard.general.string = "https://docs.google.com/spreadsheets/d/\(selectedSheet!.spreadsheetId!)/"
-        self.utils.addToastToNC(messageColor: .black, backgroundColor: #colorLiteral(red: 0.5843137503, green: 0.8235294223, blue: 0.4196078479, alpha: 1), message: "Spreadsheet URL copied!", nc: self.navigationController!)
+        self.utils.addToast(backgroundColor: K.colors.neutral, message: K.popupStrings.toast.sheetUrl, vc: self.navigationController!)
     }
     //MARK: - Sheet Data manipulation
     
@@ -111,9 +96,4 @@ class SheetDetailsController: UIViewController {
             print("Error fetching data from context \(error)")
         }
     }
-}
-extension Notification.Name {
-    static let sheetIdNotificationKey = Notification.Name("sheetId")
-    static let sheetIdForResults = Notification.Name("sheetIdForResults")
-    static let sheetIdForDetails = Notification.Name("sheetIdForDetails")
 }

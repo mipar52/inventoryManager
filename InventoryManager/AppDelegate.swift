@@ -7,7 +7,6 @@
 
 import UIKit
 import GoogleSignIn
-import Google
 import Firebase
 import CoreData
 
@@ -15,18 +14,47 @@ import CoreData
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
+    let signInConfig = GIDConfiguration.init(clientID: K.keys.clientID)
 
-    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        // Override point for customization after application launch.
-
-        var configureError: NSError?
-        GIDSignIn.sharedInstance()?.clientID = "976815233995-v7r945sckp27i6s538k8pntqhmcda28q.apps.googleusercontent.com"
-        GGLContext.sharedInstance().configureWithError(&configureError)
-        
-        assert(configureError == nil, "Error configuring Google services: \(String(describing: configureError))")
-        FIRApp.configure()
-        return true
+    func application(
+      _ application: UIApplication,
+      didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
+    ) -> Bool {
+      GIDSignIn.sharedInstance.restorePreviousSignIn { user, error in
+        if error != nil || user == nil {
+        } else {
+            print("Previous sign in restored!")
+        }
+      }
+    FirebaseApp.configure()
+    return true
     }
+    
+    func application(_ application: UIApplication,
+                      open url: URL, sourceApplication: String?, annotation: Any) -> Bool {
+         var handled: Bool
+
+         handled = GIDSignIn.sharedInstance.handle(url)
+         if handled {
+           return true
+         }
+         
+         return false
+     }
+
+     @available(iOS 9.0, *)
+     func application(_ app: UIApplication, open url: URL,
+                      options: [UIApplication.OpenURLOptionsKey : Any]) -> Bool {
+         var handled: Bool
+         handled = GIDSignIn.sharedInstance.handle(url)
+         
+         if handled {
+           return true
+         }
+         // Handle other custom URL types.
+         // If not handled by this app, return false.
+         return false
+     }
 
     // MARK: UISceneSession Lifecycle
 

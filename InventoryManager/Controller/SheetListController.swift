@@ -22,7 +22,8 @@ class SheetListController: UITableViewController {
     var isSheetSelected : Bool?
     var selectedSpreadsheet : Spreadsheet? {
         didSet {
-            loadSheets()
+            self.loadSheets()
+            
         }
     }
     
@@ -31,95 +32,97 @@ class SheetListController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.tableFooterView = UIView()
-        loadSheets()
+        self.loadSheets()
+        self.refreshControl?.addTarget(self, action: #selector(refresh), for: UIControl.Event.valueChanged)
     }
     
     @IBAction func updateSheetsPressed(_ sender: UIBarButtonItem) {
-        
-        let sheetController = UIAlertController(title: "Add Sheet", message: "Add Sheet?", preferredStyle: .alert)
-        
-        let createNewSheet = UIAlertAction(title: "Create new Sheet", style: .default) { (action) in
+        let sheetController = UIAlertController(title: K.popupStrings.alert.addSheet, message: "", preferredStyle: .alert)
+        let createNewSheet = UIAlertAction(title: K.popupStrings.alert.createSheet, style: .default) { (action) in
             var nameField = UITextField()
-            
-            let newSheetController = UIAlertController(title: "Create new Sheet", message: "New Sheet", preferredStyle: .alert)
-            let create = UIAlertAction(title: "Create", style: .default) { (action) in
-                self.utils.ncSpin(message: "Creating Sheet..", vc: self.navigationController!)
+            let newSheetController = UIAlertController(title: K.popupStrings.alert.createSheet , message: "", preferredStyle: .alert)
+            let create = UIAlertAction(title: K.popupStrings.alert.create, style: .default) { (action) in
+                self.utils.showSpinner(message: K.popupStrings.spinner.creatingSheet, vc: self.navigationController!)
                 self.sheetBrain.createNewSheet(spreadsheet: self.selectedSpreadsheet!, spreadID: (self.selectedSpreadsheet?.spreadsheetId!)!, sheetName: nameField.text!) { (bool) in
                     self.dismiss(animated: true) {
                         if bool == true {
-                     
-                            self.utils.showAlert(title: "Sucess", message: "New Sheet added!", vc: self)
+                            self.utils.showAlert(title: K.popupStrings.alert.success, message: K.popupStrings.alert.newSheetAdded, vc: self)
                             self.loadSheets()
                         } else {
-                            self.utils.showAlert(title: "Error", message: "Could not create sheet! \n1. See if you are connected to the Internet \n2. Check if you are properly signed into your Google Account. \n3. See if you have the right perrmission to edit the Spreadsheet.", vc: self)
+                            self.utils.showAlert(title: K.popupStrings.alert.error, message: K.popupStrings.alert.errorCreateSheet, vc: self)
                             self.loadSheets()
                         }
                     }
                 }
             }
-            let cancel = UIAlertAction(title: "Cancel", style: .cancel) { (action) in
+            let cancel = UIAlertAction(title: K.popupStrings.alert.cancel, style: .cancel) { (action) in
                 self.dismiss(animated: true, completion: nil)
             }
             newSheetController.addTextField { (field) in
                 nameField = field
-                nameField.placeholder = "Sheet name"
+                nameField.placeholder = K.popupStrings.alert.sheetName
             }
             newSheetController.addAction(create)
             newSheetController.addAction(cancel)
             self.present(newSheetController, animated: true, completion: nil)
-                        
         }
-        
-        let updateExistingSheets = UIAlertAction(title: "Update existing Sheets", style: .default) { (action) in
-            
-            let updateController = UIAlertController(title: "Update Existing Sheets", message: "Update Sheets?", preferredStyle: .alert)
-            
-            let update = UIAlertAction(title: "Update", style: .default) { (action) in
-                self.utils.ncSpin(message: " Finding Sheets..", vc: self.navigationController!)
-
-                self.sheetBrain.updateSheets(spreadsheet: self.selectedSpreadsheet!, spreadID: (self.selectedSpreadsheet?.spreadsheetId)!, updateArray: self.sheetArray) { (bool) in
+        let updateExistingSheets = UIAlertAction(title: K.popupStrings.alert.updateSheets, style: .default) { (action) in
+            self.utils.showSpinner(message: K.popupStrings.spinner.findingSheets, vc: self.navigationController!)
+                self.sheetBrain.updateSheets(spreadsheet: self.selectedSpreadsheet!, spreadID: (self.selectedSpreadsheet?.spreadsheetId)!) { (success, sheetCounter) in
                     self.dismiss(animated: true) {
-                        print(self.sheetBrain.newSheetCounter)
-                        let counter = self.sheetBrain.newSheetCounter
-                        if bool == true {
-                            if counter == 0 {
-                                self.utils.showAlert(title: "Everything already here", message: "All Sheets already here!", vc: self)
+                        if success == true {
+                            if sheetCounter == 0 {
+                                self.utils.showAlert(title: "", message: K.popupStrings.alert.allSheetsHere, vc: self)
                                 self.loadSheets()
-                            } else if counter == 1 {
-                                self.utils.showAlert(title: "Success", message: "Added 1 Sheet!", vc: self)
+                            } else if sheetCounter == 1 {
+                                self.utils.showAlert(title: K.popupStrings.alert.success, message: K.popupStrings.alert.addedOneSheet, vc: self)
                                 self.tableView.reloadData()
                                 self.loadSheets()
-                            } else if counter > 1 {
-                            self.utils.showAlert(title: "Success", message: "Added \(self.sheetBrain.newSheetCounter) Sheets!", vc: self)
+                            } else if sheetCounter! > 1 {
+                                self.utils.showAlert(title: K.popupStrings.alert.success, message: "Added \(sheetCounter) Sheets!", vc: self)
                             self.tableView.reloadData()
-                            self.loadSheets()
+                                self.loadSheets()
                            }
-                        } else if bool == false {
-                        self.utils.showAlert(title: "Error", message: "Could not update Sheets!", vc: self)
-                        self.loadSheets()
+                        } else if success == false {
+                            self.utils.showAlert(title: K.popupStrings.alert.error, message: K.popupStrings.alert.errorUpdateSheet, vc: self)
+                            self.loadSheets()
                         }
                     }
                 }
-            }
-            let cancel = UIAlertAction(title: "Cancel", style: .cancel) { (action) in
-                self.dismiss(animated: true, completion: nil)
-            }
-            updateController.addAction(update)
-            updateController.addAction(cancel)
-            self.present(updateController, animated: true, completion: nil)
-            
         }
-        
-        let cancel = UIAlertAction(title: "Cancel", style: .cancel) { (action) in
+        let cancel = UIAlertAction(title: K.popupStrings.alert.cancel, style: .cancel) { (action) in
             self.dismiss(animated: true, completion: nil)
         }
         sheetController.addAction(createNewSheet)
         sheetController.addAction(updateExistingSheets)
         sheetController.addAction(cancel)
-        
         present(sheetController, animated: true, completion: nil)
     }
-    
+    @objc func refresh(sender:AnyObject){
+        self.sheetBrain.updateSheets(spreadsheet: self.selectedSpreadsheet!, spreadID: (self.selectedSpreadsheet?.spreadsheetId)!) { (success, sheetCounter) in
+            self.dismiss(animated: true) {
+                if success == true {
+                    if sheetCounter == 0 {
+                        self.utils.addToast(backgroundColor: K.colors.neutral, message: K.popupStrings.alert.allSheetsHere, vc: self)
+                        self.loadSheets()
+                    } else if sheetCounter == 1 {
+                        self.utils.addToast(backgroundColor: K.colors.success, message: K.popupStrings.alert.addedOneSheet, vc: self)
+                        self.loadSheets()
+                        
+                    } else if sheetCounter! > 1 {
+                        self.utils.addToast(backgroundColor: K.colors.success, message: "Added \(sheetCounter!) Sheets!", vc: self)
+                        self.loadSheets()
+                    self.tableView.reloadData()
+                        self.loadSheets()
+                   }
+                } else if success == false {
+                    self.utils.addToast(backgroundColor: K.colors.error, message: K.popupStrings.alert.errorUpdateSheet, vc: self)
+                    self.loadSheets()
+                }
+                self.refreshControl?.endRefreshing()
+            }
+        }
+    }
     // MARK: - Table view data source
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -127,58 +130,41 @@ class SheetListController: UITableViewController {
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        
-        let sheetCell = tableView.dequeueReusableCell(withIdentifier: "sheetCell", for: indexPath)
-        
+        let sheetCell = tableView.dequeueReusableCell(withIdentifier: K.identifiers.sheetCell, for: indexPath)
         let sheet = sheetArray[indexPath.row]
-        
         sheetCell.textLabel?.text = sheet.sheetName
-        sheetCell.selectionStyle = .none
         if sheet.sheetSelected == true {
             sheetCell.accessoryType = .checkmark
-            sheetCell.textLabel?.textColor = #colorLiteral(red: 0.5843137503, green: 0.8235294223, blue: 0.4196078479, alpha: 1)
-            sheetCell.tintColor = #colorLiteral(red: 0.5843137503, green: 0.8235294223, blue: 0.4196078479, alpha: 1)
+            sheetCell.textLabel?.textColor = K.colors.success
+            sheetCell.tintColor = K.colors.success
         } else {
-            sheetCell.accessoryType = .none
+            sheetCell.accessoryType = .disclosureIndicator
             sheetCell.textLabel?.textColor = .white
         }
         return sheetCell
-                
     }
-    
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 50.0
+    }
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
 
         if editingStyle == .delete {
-            let alert = UIAlertController(title: "Delete Sheet?", message: "", preferredStyle: .alert)
-            let sure = UIAlertAction(title: "YES", style: .default) { (action) in
-                
+            self.utils.addTwoActionAlert(title: K.popupStrings.alert.deleteSheet , message: K.popupStrings.alert.deleteSheetAction, actionTitle: K.popupStrings.alert.yes, vc: self) { action in
                 self.database.context.delete(self.sheetArray[indexPath.row])
                 self.sheetArray.remove(at: indexPath.row)
                 tableView.deleteRows(at: [indexPath], with: .fade)
-                
-                self.utils.addToastToNC(messageColor: .black, backgroundColor: #colorLiteral(red: 0.9330014586, green: 0.3689673841, blue: 0.4903494716, alpha: 1), message: "Deleting Sheet..", nc: self.navigationController!)
+                self.utils.addToast(backgroundColor: K.colors.error, message: K.popupStrings.spinner.deletingSheet, vc: self.navigationController!)
                 self.database.savePassedData()
                     tableView.reloadData()
             }
-            let nah = UIAlertAction(title: "NO", style: .cancel) { (action) in
-                self.dismiss(animated: true, completion: nil)
-            }
-            alert.addAction(sure)
-            alert.addAction(nah)
-            present(alert, animated: true, completion: nil)
         }
     }
-    
-    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 55.0
-    }
-    
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        performSegue(withIdentifier: "goToSheetDetails", sender: self)
+        performSegue(withIdentifier: K.segues.goTosheetDetails, sender: self)
     }
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == "goToSheetDetails" {
+        if segue.identifier ==  K.segues.goTosheetDetails {
             let destVC = segue.destination as! SheetDetailsController
             destVC.selectedSheet = selectedSpreadsheet
             SheetDetailsController.sheetDeleteDelegate = self
@@ -187,30 +173,6 @@ class SheetListController: UITableViewController {
                 destVC.currentSheetName = sheetArray[indexPath.row].sheetName
             }
         }
-    }
-}
-
-extension SheetListController {
-    
-    func loadSheets(with request: NSFetchRequest<Sheet> = Sheet.fetchRequest(), predicate: NSPredicate? = nil) {
-        
-        let spreadsheetPredicate = NSPredicate(format: "parentCategory.spreadsheetName LIKE %@", selectedSpreadsheet!.spreadsheetName! as String)
-        
-        let sort = NSSortDescriptor(key: "sheetName", ascending: true)
-            request.sortDescriptors = [sort]
-        
-        if let addtionalPredicate = predicate {
-            request.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [spreadsheetPredicate, addtionalPredicate])
-        } else {
-            request.predicate = spreadsheetPredicate
-        }
-        
-        do {
-            sheetArray = try database.context.fetch(request)
-        } catch {
-            print("Error fetching data from context \(error)")
-        }
-        tableView.reloadData()
     }
 }
 
@@ -265,4 +227,21 @@ extension SheetListController: selectedSheetDelegeate, sheetDeleteDelegate {
                          tableView.reloadData()
                      }
                      }
+    func loadSheets(with request: NSFetchRequest<Sheet> = Sheet.fetchRequest(), predicate: NSPredicate? = nil) {
+        
+        let spreadsheetPredicate = NSPredicate(format: "parentCategory.spreadsheetName LIKE %@", (selectedSpreadsheet?.spreadsheetName)!)
+        let sort = NSSortDescriptor(key: "sheetName", ascending: true)
+            request.sortDescriptors = [sort]
+        if let addtionalPredicate = predicate {
+            request.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [spreadsheetPredicate, addtionalPredicate])
+        } else {
+            request.predicate = spreadsheetPredicate
+        }
+        do {
+            sheetArray = try self.database.context.fetch(request)
+        } catch {
+            print("Error fetching data from context \(error)")
+        }
+        tableView.reloadData()
+    }
 }

@@ -10,128 +10,89 @@ import CoreData
 import UIKit
 
 class DataBaseBrain {
-    var sheetArray = [Spreadsheet]()
+
     let sheetBrain = SheetBrain()
     let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
-    var isSheetDuplicated: Bool?
-    var isDuplicated: Bool?
-    var sheets = [Sheet]()
-    var newSheetCounter = 0
-    var selectedSpreadsheet : Spreadsheet? {
-        didSet{
-            loadSpreadSheets()
+    var spreadsheetArray = [Spreadsheet]()
+    var dataArray = [ScannedData]()
+    var sheetArray = [Sheet]()
+    
+    func savePassedData() {
+        do {
+        try context.save()
+        print("Data saved!")
+        } catch {
+        print("Error saving category \(error)")
         }
     }
     
-    func savePassedData() {
-             do {
-                 try context.save()
-                print("Data saved!")
-             } catch {
-                 print("Error saving category \(error)")
-             }
-         }
-  func fetchExistingSpreadsheet (spreadsheetId: String) {
-      
+    func deleteAllData(entity: String, completionHandler: @escaping (Bool) -> Void) {
+        let fetchRequest: NSFetchRequest<NSFetchRequestResult> = NSFetchRequest(entityName: entity)
+        let deleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest)
+        do {
+            try context.execute(deleteRequest)
+            completionHandler(true)
+        } catch let error as NSError {
+            print("Error with deleting all entities: \(error)")
+            completionHandler(false)
+        }
+    }
 
-      
+  func fetchExistingSpreadsheet (spreadsheetId: String, completionHandler: @escaping (Bool) -> Void) {
           let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "Spreadsheet")
           fetchRequest.fetchLimit =  1
-         
           fetchRequest.predicate = NSPredicate(format: "spreadsheetId == [d] %@" ,spreadsheetId)
           fetchRequest.includesPendingChanges = false
-      
           do {
               let count = try context.count(for: fetchRequest)
               if count > 0 {
-                  //print("count is \(count)")
-                isSheetDuplicated = true
+                  completionHandler(true)
               } else {
-                isSheetDuplicated = false
+                  completionHandler(false)
               }
-          }catch let error as NSError {
+          } catch let error as NSError {
               print("Could not fetch. \(error), \(error.userInfo)")
           }
   }
-    func loadSheets (sheetName: String?, sheetId: String?, spreadSheet: Spreadsheet) {
+    func fetchExistingSheets (sheetName: String?, sheetId: String?, spreadSheet: Spreadsheet, completionHandler: @escaping (Bool, Int) -> Void) {
         let request: NSFetchRequest<Sheet> = Sheet.fetchRequest()
         request.fetchLimit =  1
-        
         let spreadsheetPredicate = NSPredicate(format: "parentCategory == %@", spreadSheet)
         let sheetPredicate = NSPredicate(format: "sheetName == %@" ,sheetName!)
-        
         request.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [spreadsheetPredicate, sheetPredicate])
         request.includesPendingChanges = false
         request.includesSubentities = false
+        var newSheetCount = 0
         do {
             let count = try context.count(for: request)
             if count > 0 {
                 print("count is \(count)")
-              isDuplicated = true
-              print("Fetch existing sheet bool: \(isDuplicated), for \(sheetName)")
-                return
+                completionHandler(true, newSheetCount)
             } else if count == 0 {
-                self.newSheetCounter = self.newSheetCounter + 1
+                newSheetCount += 1
                 let newSheet = Sheet(context: context)
                 newSheet.sheetName = sheetName
                 newSheet.sheetId = sheetId
                 newSheet.parentCategory = spreadSheet
-                sheets.append(newSheet)
-                //self.newSheetCounter += 1
+                sheetArray.append(newSheet)
                 savePassedData()
-
-              isDuplicated = false
+                completionHandler(false, newSheetCount)
             }
         } catch let error as NSError {
             print("Could not fetch. \(error), \(error.userInfo)")
         }
     }
-
-    func fetchExistingSheets(sheetName: String, sheetId: String, spreadSheet: Spreadsheet) {
-        let sheetBrain = SheetBrain()
-        print("Fetch existing sheet executing...")
-        let fetchRequest: NSFetchRequest<Spreadsheet> = Spreadsheet.fetchRequest()
-
-        fetchRequest.fetchLimit =  1
-        fetchRequest.predicate = NSPredicate(format: "sheet.sheetName == %@" ,sheetName)
-        fetchRequest.includesPendingChanges = false
-        fetchRequest.includesSubentities = false
-        
-        do {
-            let count = try context.count(for: fetchRequest)
-            if count > 0 {
-              isDuplicated = true
-              return
-                
-            } else if count == 0 {
-                sheetBrain.newSheetCounter += 1
-                let newSheet = Sheet(context: context)
-                newSheet.sheetName = sheetName
-                newSheet.sheetId = sheetId
-                newSheet.parentCategory = spreadSheet
-                sheets.append(newSheet)
-                savePassedData()
-              isDuplicated = false
-            }
-        } catch let error as NSError {
-            print("Could not fetch. \(error), \(error.userInfo)")
-        }
-        print(newSheetCounter)
-    }
-    
-    func loadSpreadSheets(with request: NSFetchRequest<Spreadsheet> = Spreadsheet.fetchRequest(), predicate: NSPredicate? = nil) {
-        
-        let categoryPredicate = NSPredicate(format: "parentCategory.spreadsheetName MATCHES %@", selectedSpreadsheet!.spreadsheetName!)
-        
-        if let addtionalPredicate = predicate {
-            request.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [categoryPredicate, addtionalPredicate])
-        } else {
-            request.predicate = categoryPredicate
-        }
-        do {
-            sheetArray = try context.fetch(request)
-        } catch {
-            print("Error fetching data from context \(error)")
-        }
-    }
+//    func loadSpreadSheets(with request: NSFetchRequest<Spreadsheet> = Spreadsheet.fetchRequest(), predicate: NSPredicate? = nil) {
+//        let categoryPredicate = NSPredicate(format: "parentCategory.spreadsheetName MATCHES %@", selectedSpreadsheet!.spreadsheetName!)
+//        if let addtionalPredicate = predicate {
+//            request.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [categoryPredicate, addtionalPredicate])
+//        } else {
+//            request.predicate = categoryPredicate
+//        }
+//        do {
+//            spreadsheetArray = try context.fetch(request)
+//        } catch {
+//            print("Error fetching data from context \(error)")
+//        }
+//    }
 }

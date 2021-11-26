@@ -7,12 +7,16 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		A10A476F274176F600C10909 /* DriveBrain.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10A476E274176F600C10909 /* DriveBrain.swift */; };
+		A10A477127417B3500C10909 /* AccountBrain.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10A477027417B3500C10909 /* AccountBrain.swift */; };
+		A16F6362273E5CC00045CE84 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = A16F6361273E5CC00045CE84 /* Constants.swift */; };
+		A16F6364273E62860045CE84 /* ScanBrain.swift in Sources */ = {isa = PBXBuildFile; fileRef = A16F6363273E62860045CE84 /* ScanBrain.swift */; };
 		A199D267260CC0A900577323 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A199D266260CC0A900577323 /* AppDelegate.swift */; };
 		A199D269260CC0A900577323 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A199D268260CC0A900577323 /* SceneDelegate.swift */; };
 		A199D271260CC0A900577323 /* InventoryManager.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = A199D26F260CC0A900577323 /* InventoryManager.xcdatamodeld */; };
 		A199D273260CC0AA00577323 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A199D272260CC0AA00577323 /* Assets.xcassets */; };
 		A199D276260CC0AA00577323 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A199D274260CC0AA00577323 /* LaunchScreen.storyboard */; };
-		A199D2BA260CC29900577323 /* SheetController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A199D2AF260CC29900577323 /* SheetController.swift */; };
+		A199D2BA260CC29900577323 /* SpreadsheetController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A199D2AF260CC29900577323 /* SpreadsheetController.swift */; };
 		A199D2BB260CC29900577323 /* PresentationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A199D2B0260CC29900577323 /* PresentationController.swift */; };
 		A199D2BC260CC29900577323 /* OverlayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A199D2B1260CC29900577323 /* OverlayView.swift */; };
 		A199D2BD260CC29900577323 /* SettingsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A199D2B2260CC29900577323 /* SettingsController.swift */; };
@@ -35,6 +39,10 @@
 /* Begin PBXFileReference section */
 		005E18B13C0E1BAEA55D6B89 /* Pods-InventoryManager.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-InventoryManager.debug.xcconfig"; path = "Target Support Files/Pods-InventoryManager/Pods-InventoryManager.debug.xcconfig"; sourceTree = "<group>"; };
 		760287CD690C723D2E331D7C /* Pods_InventoryManager.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_InventoryManager.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		A10A476E274176F600C10909 /* DriveBrain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DriveBrain.swift; sourceTree = "<group>"; };
+		A10A477027417B3500C10909 /* AccountBrain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountBrain.swift; sourceTree = "<group>"; };
+		A16F6361273E5CC00045CE84 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
+		A16F6363273E62860045CE84 /* ScanBrain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanBrain.swift; sourceTree = "<group>"; };
 		A199D263260CC0A900577323 /* InventoryManager.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = InventoryManager.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A199D266260CC0A900577323 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AppDelegate.swift; path = ../AppDelegate.swift; sourceTree = "<group>"; };
 		A199D268260CC0A900577323 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = SceneDelegate.swift; path = ../SceneDelegate.swift; sourceTree = "<group>"; };
@@ -42,7 +50,7 @@
 		A199D272260CC0AA00577323 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		A199D275260CC0AA00577323 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		A199D277260CC0AA00577323 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		A199D2AF260CC29900577323 /* SheetController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SheetController.swift; sourceTree = "<group>"; };
+		A199D2AF260CC29900577323 /* SpreadsheetController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SpreadsheetController.swift; sourceTree = "<group>"; };
 		A199D2B0260CC29900577323 /* PresentationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PresentationController.swift; sourceTree = "<group>"; };
 		A199D2B1260CC29900577323 /* OverlayView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OverlayView.swift; sourceTree = "<group>"; };
 		A199D2B2260CC29900577323 /* SettingsController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsController.swift; sourceTree = "<group>"; };
@@ -124,7 +132,7 @@
 				A199D2B4260CC29900577323 /* ScanHistoryController.swift */,
 				A199D2B9260CC29900577323 /* ScanDetailsController.swift */,
 				A199D2B2260CC29900577323 /* SettingsController.swift */,
-				A199D2AF260CC29900577323 /* SheetController.swift */,
+				A199D2AF260CC29900577323 /* SpreadsheetController.swift */,
 				A199D2B7260CC29900577323 /* SheetListController.swift */,
 				A199D2B8260CC29900577323 /* SheetDetailsController.swift */,
 			);
@@ -134,12 +142,16 @@
 		A199D2C6260CC2A300577323 /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				A199D266260CC0A900577323 /* AppDelegate.swift */,
 				A199D26F260CC0A900577323 /* InventoryManager.xcdatamodeld */,
-				A199D2C7260CC2A300577323 /* SheetBrain.swift */,
-				A199D2C8260CC2A300577323 /* DatabaseBrain.swift */,
-				A199D2CB260CC2A300577323 /* Utils.swift */,
+				A199D266260CC0A900577323 /* AppDelegate.swift */,
 				A199D268260CC0A900577323 /* SceneDelegate.swift */,
+				A16F6363273E62860045CE84 /* ScanBrain.swift */,
+				A199D2C8260CC2A300577323 /* DatabaseBrain.swift */,
+				A10A477027417B3500C10909 /* AccountBrain.swift */,
+				A199D2C7260CC2A300577323 /* SheetBrain.swift */,
+				A10A476E274176F600C10909 /* DriveBrain.swift */,
+				A199D2CB260CC2A300577323 /* Utils.swift */,
+				A16F6361273E5CC00045CE84 /* Constants.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -158,8 +170,8 @@
 			isa = PBXGroup;
 			children = (
 				A199D2B0260CC29900577323 /* PresentationController.swift */,
-				A199D2B5260CC29900577323 /* SheetDetailTableController.swift */,
 				A199D2B1260CC29900577323 /* OverlayView.swift */,
+				A199D2B5260CC29900577323 /* SheetDetailTableController.swift */,
 				A199D2B3260CC29900577323 /* ScanDetailsTableController.swift */,
 			);
 			path = Views;
@@ -185,7 +197,7 @@
 				A199D260260CC0A900577323 /* Frameworks */,
 				A199D261260CC0A900577323 /* Resources */,
 				6AC4B93E19F0D3E5B1C0489F /* [CP] Embed Pods Frameworks */,
-				4ADB9366C96607CD4C21F423 /* [CP] Copy Pods Resources */,
+				A10A477227418DCF00C10909 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -244,23 +256,6 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		4ADB9366C96607CD4C21F423 /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-InventoryManager/Pods-InventoryManager-resources-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Copy Pods Resources";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-InventoryManager/Pods-InventoryManager-resources-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-InventoryManager/Pods-InventoryManager-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
 		6AC4B93E19F0D3E5B1C0489F /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -300,6 +295,25 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
+		A10A477227418DCF00C10909 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}/Contents/Resources/DWARF/${TARGET_NAME}",
+				"$(SRCROOT)/$(BUILT_PRODUCTS_DIR)/$(INFOPLIST_PATH)",
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\n\"${PODS_ROOT}/FirebaseCrashlytics/run\"\n";
+		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -309,7 +323,8 @@
 			files = (
 				A199D2CE260CC2A300577323 /* SheetBrain.swift in Sources */,
 				A199D2BD260CC29900577323 /* SettingsController.swift in Sources */,
-				A199D2BA260CC29900577323 /* SheetController.swift in Sources */,
+				A16F6364273E62860045CE84 /* ScanBrain.swift in Sources */,
+				A199D2BA260CC29900577323 /* SpreadsheetController.swift in Sources */,
 				A199D2C3260CC29900577323 /* SheetDetailsController.swift in Sources */,
 				A199D2C1260CC29900577323 /* MainScreenController.swift in Sources */,
 				A199D271260CC0A900577323 /* InventoryManager.xcdatamodeld in Sources */,
@@ -323,7 +338,10 @@
 				A199D2BB260CC29900577323 /* PresentationController.swift in Sources */,
 				A199D2C4260CC29900577323 /* ScanDetailsController.swift in Sources */,
 				A199D2D1260CC2A300577323 /* Utils.swift in Sources */,
+				A10A476F274176F600C10909 /* DriveBrain.swift in Sources */,
+				A10A477127417B3500C10909 /* AccountBrain.swift in Sources */,
 				A199D2C0260CC29900577323 /* SheetDetailTableController.swift in Sources */,
+				A16F6362273E5CC00045CE84 /* Constants.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -488,7 +506,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = C582M7Z823;
+				DEVELOPMENT_TEAM = CQTJWP89J7;
 				INFOPLIST_FILE = InventoryManager/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -508,7 +526,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = C582M7Z823;
+				DEVELOPMENT_TEAM = CQTJWP89J7;
 				INFOPLIST_FILE = InventoryManager/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",

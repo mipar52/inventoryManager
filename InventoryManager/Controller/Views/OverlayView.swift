@@ -6,7 +6,7 @@
 //
 
 import UIKit
-import Microblink
+import Pdf417Mobi
 
 class OverlayView: UIViewController {
     
@@ -23,7 +23,7 @@ class OverlayView: UIViewController {
     var pointOrigin: CGPoint?
     var results : String?
     var dataSent : Bool?
-    let nc = UIApplication.shared.windows[0].rootViewController as! UINavigationController
+    //let nc = UIApplication.shared.windows[0].rootViewController as! UINavigationController
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -60,7 +60,7 @@ class OverlayView: UIViewController {
                     let dataToSave = ScannedData(context: database.context)
                     dataToSave.scannedData = results
                     print("Failed data that is going to db: \(String(describing:dataToSave.scannedData))")
-                
+                    dataToSave.scanDate = self.utils.getCurrentDate()
                     savedData.append(dataToSave)
                     database.savePassedData()
                 self.dismiss(animated: true, completion: nil)
