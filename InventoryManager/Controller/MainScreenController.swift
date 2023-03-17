@@ -44,6 +44,10 @@ class MainScreenController: UIViewController {
         
     }
     
+    @IBAction func QrScanPressed(_ sender: UIButton) {
+        performSegue(withIdentifier: "goToCamera", sender: self)
+    }
+    
     @objc func showHalfVC(blinkIdOverlayViewController: MBBBarcodeOverlayViewController) {
         let slideVC = OverlayView()
         slideVC.results = infoForVC!

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="17506" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="21507" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17505"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21505"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -14,13 +14,14 @@
         </array>
     </customFonts>
     <objects>
-        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="OverlayView" customModule="BlinkItems" customModuleProvider="target">
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="OverlayView" customModule="InventoryManager" customModuleProvider="target">
             <connections>
                 <outlet property="dateOfPurchase" destination="gnf-D0-LkW" id="PO8-PU-DBZ"/>
                 <outlet property="inventoryText" destination="qjf-Ya-6wD" id="dbn-ym-YoH"/>
                 <outlet property="modelText" destination="0t0-Of-las" id="ppT-86-caa"/>
                 <outlet property="serial_text" destination="dUQ-RD-YlR" id="RWM-yq-dRo"/>
                 <outlet property="slideIdicator" destination="h5u-lC-Vtp" id="dp4-sa-hOB"/>
+                <outlet property="uploadButton" destination="fSr-xh-Bsq" id="JZ6-Hh-aWM"/>
                 <outlet property="view" destination="iN0-l3-epB" id="opn-YC-DFv"/>
             </connections>
         </placeholder>
@@ -51,11 +52,12 @@
                     <nil key="highlightedColor"/>
                 </label>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" id="fSr-xh-Bsq">
-                    <rect key="frame" x="19" y="535" width="375" height="50"/>
-                    <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
+                    <rect key="frame" x="19" y="539" width="375" height="46"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
+                    <color key="backgroundColor" red="0.1141907945" green="0.86237672659999998" blue="0.77218548799999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     <fontDescription key="fontDescription" name="SFPro-Semibold" family="SF Pro" pointSize="17"/>
-                    <state key="normal" title="Upload" backgroundImage="Overlay">
-                        <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                    <state key="normal" title="Upload">
+                        <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     </state>
                     <connections>
                         <action selector="uploadPressed:" destination="-1" eventType="touchUpInside" id="6Zb-qd-ks4"/>
@@ -117,7 +119,7 @@
                     <nil key="highlightedColor"/>
                 </label>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="DATE OF PURCHASE" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="nBk-ke-bsX">
-                    <rect key="frame" x="16" y="348" width="130" height="20"/>
+                    <rect key="frame" x="16" y="348" width="325" height="20"/>
                     <autoresizingMask key="autoresizingMask" flexibleMinY="YES" flexibleMaxY="YES"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="20" id="DjX-Ry-61e"/>
@@ -191,7 +193,4 @@
             <point key="canvasLocation" x="131.8840579710145" y="219.30803571428569"/>
         </view>
     </objects>
-    <resources>
-        <image name="Overlay" width="375" height="50"/>
-    </resources>
 </document>
