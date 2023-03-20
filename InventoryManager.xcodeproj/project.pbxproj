@@ -11,6 +11,8 @@
 		A10A477127417B3500C10909 /* AccountBrain.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10A477027417B3500C10909 /* AccountBrain.swift */; };
 		A16F6362273E5CC00045CE84 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = A16F6361273E5CC00045CE84 /* Constants.swift */; };
 		A16F6364273E62860045CE84 /* ScanBrain.swift in Sources */ = {isa = PBXBuildFile; fileRef = A16F6363273E62860045CE84 /* ScanBrain.swift */; };
+		A17C960829C4907000EA6D15 /* ScannerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A17C960729C4907000EA6D15 /* ScannerController.swift */; };
+		A17C960A29C4AAD300EA6D15 /* ScanningView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A17C960929C4AAD300EA6D15 /* ScanningView.swift */; };
 		A199D267260CC0A900577323 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A199D266260CC0A900577323 /* AppDelegate.swift */; };
 		A199D269260CC0A900577323 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A199D268260CC0A900577323 /* SceneDelegate.swift */; };
 		A199D271260CC0A900577323 /* InventoryManager.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = A199D26F260CC0A900577323 /* InventoryManager.xcdatamodeld */; };
@@ -43,6 +45,8 @@
 		A10A477027417B3500C10909 /* AccountBrain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountBrain.swift; sourceTree = "<group>"; };
 		A16F6361273E5CC00045CE84 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		A16F6363273E62860045CE84 /* ScanBrain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanBrain.swift; sourceTree = "<group>"; };
+		A17C960729C4907000EA6D15 /* ScannerController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScannerController.swift; sourceTree = "<group>"; };
+		A17C960929C4AAD300EA6D15 /* ScanningView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanningView.swift; sourceTree = "<group>"; };
 		A199D263260CC0A900577323 /* InventoryManager.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = InventoryManager.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A199D266260CC0A900577323 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AppDelegate.swift; path = ../AppDelegate.swift; sourceTree = "<group>"; };
 		A199D268260CC0A900577323 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = SceneDelegate.swift; path = ../SceneDelegate.swift; sourceTree = "<group>"; };
@@ -135,6 +139,7 @@
 				A199D2AF260CC29900577323 /* SpreadsheetController.swift */,
 				A199D2B7260CC29900577323 /* SheetListController.swift */,
 				A199D2B8260CC29900577323 /* SheetDetailsController.swift */,
+				A17C960729C4907000EA6D15 /* ScannerController.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -173,6 +178,7 @@
 				A199D2B1260CC29900577323 /* OverlayView.swift */,
 				A199D2B5260CC29900577323 /* SheetDetailTableController.swift */,
 				A199D2B3260CC29900577323 /* ScanDetailsTableController.swift */,
+				A17C960929C4AAD300EA6D15 /* ScanningView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -327,8 +333,10 @@
 				A199D2BA260CC29900577323 /* SpreadsheetController.swift in Sources */,
 				A199D2C3260CC29900577323 /* SheetDetailsController.swift in Sources */,
 				A199D2C1260CC29900577323 /* MainScreenController.swift in Sources */,
+				A17C960A29C4AAD300EA6D15 /* ScanningView.swift in Sources */,
 				A199D271260CC0A900577323 /* InventoryManager.xcdatamodeld in Sources */,
 				A199D2BC260CC29900577323 /* OverlayView.swift in Sources */,
+				A17C960829C4907000EA6D15 /* ScannerController.swift in Sources */,
 				A199D2BE260CC29900577323 /* ScanDetailsTableController.swift in Sources */,
 				A199D2BF260CC29900577323 /* ScanHistoryController.swift in Sources */,
 				A199D2C2260CC29900577323 /* SheetListController.swift in Sources */,

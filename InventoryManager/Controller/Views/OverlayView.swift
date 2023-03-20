@@ -15,6 +15,9 @@ class OverlayView: UIViewController {
     @IBOutlet weak var serial_text: UILabel!
     @IBOutlet weak var inventoryText: UILabel!
     @IBOutlet weak var dateOfPurchase: UILabel!
+    @IBOutlet weak var uploadButton: UIButton!
+    
+    @IBOutlet weak var dateOfPurchaseLabel: UILabel!
     
     let navigationC  = UINavigationController()
     let sheetBrain = SheetBrain()
@@ -23,19 +26,21 @@ class OverlayView: UIViewController {
     var pointOrigin: CGPoint?
     var results : String?
     var dataSent : Bool?
-    //let nc = UIApplication.shared.windows[0].rootViewController as! UINavigationController
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        setupConstraints()
         print("Results are \(results)")
         let panGesture = UIPanGestureRecognizer(target: self, action: #selector(panGestureRecognizerAction))
         view.addGestureRecognizer(panGesture)
         slideIdicator.roundCorners(.allCorners, radius: 10)
+        uploadButton.roundCorners(.allCorners, radius: 12)
     }
     
     override func viewWillAppear(_ animated: Bool) {
         handleInfo()
     }
+    
     override func viewDidLayoutSubviews() {
         if !hasSetPointOrigin {
             hasSetPointOrigin = true
@@ -80,12 +85,27 @@ class OverlayView: UIViewController {
     
     func handleInfo() {
         let noinfo = "Not defined"
-        let splitResults = results?.components(separatedBy: (";" + "\n"))
+        let splitResults = results?.components(separatedBy: ("\n"))
         
         modelText.text = splitResults![optional: 0] ?? noinfo
         serial_text.text = splitResults![optional: 1] ?? noinfo
         inventoryText.text = splitResults![optional: 2] ?? noinfo
         let dateResult = splitResults![optional: 3]?.replacingOccurrences(of: ";", with: "") ?? noinfo
         dateOfPurchase.text = dateResult
+    }
+}
+
+extension OverlayView {
+    func setupConstraints() {
+        let marings = view.layoutMarginsGuide
+        dateOfPurchase.leadingAnchor.constraint(equalTo: marings.leadingAnchor, constant: 20).isActive = (20 != 0)
+        dateOfPurchase.trailingAnchor.constraint(equalTo: marings.trailingAnchor, constant: 20).isActive = (20 != 0)
+        
+//        uploadButton.leadingAnchor.constraint(equalTo: marings.leadingAnchor, constant: 30).isActive = (20 != 0)
+//        uploadButton.trailingAnchor.constraint(equalTo: marings.trailingAnchor, constant: 30).isActive = (20 != 0)
+       // uploadButton.frame.size = CGSize(width: 374, height: 50)
+        //uploadButton.frame.width = 350
+        
+
     }
 }
