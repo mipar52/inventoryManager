@@ -133,13 +133,13 @@
 			children = (
 				A1C104B2260E14B900431CB9 /* Views */,
 				A199D2B6260CC29900577323 /* MainScreenController.swift */,
+				A17C960729C4907000EA6D15 /* ScannerController.swift */,
 				A199D2B4260CC29900577323 /* ScanHistoryController.swift */,
 				A199D2B9260CC29900577323 /* ScanDetailsController.swift */,
 				A199D2B2260CC29900577323 /* SettingsController.swift */,
 				A199D2AF260CC29900577323 /* SpreadsheetController.swift */,
 				A199D2B7260CC29900577323 /* SheetListController.swift */,
 				A199D2B8260CC29900577323 /* SheetDetailsController.swift */,
-				A17C960729C4907000EA6D15 /* ScannerController.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";

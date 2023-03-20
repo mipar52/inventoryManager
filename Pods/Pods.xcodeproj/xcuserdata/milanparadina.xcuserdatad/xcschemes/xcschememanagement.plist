@@ -123,13 +123,6 @@
 			<key>orderHint</key>
 			<integer>14</integer>
 		</dict>
-		<key>PPpdf417.xcscheme</key>
-		<dict>
-			<key>isShown</key>
-			<false/>
-			<key>orderHint</key>
-			<integer>19</integer>
-		</dict>
 		<key>Pods-InventoryManager.xcscheme</key>
 		<dict>
 			<key>isShown</key>
@@ -142,14 +135,14 @@
 			<key>isShown</key>
 			<false/>
 			<key>orderHint</key>
-			<integer>20</integer>
+			<integer>19</integer>
 		</dict>
 		<key>Toast-Swift.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
 			<key>orderHint</key>
-			<integer>21</integer>
+			<integer>20</integer>
 		</dict>
 		<key>nanopb.xcscheme</key>
 		<dict>

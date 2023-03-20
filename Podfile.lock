@@ -139,7 +139,6 @@ PODS:
     - nanopb/encode (= 2.30908.0)
   - nanopb/decode (2.30908.0)
   - nanopb/encode (2.30908.0)
-  - PPpdf417 (8.0.1)
   - PromisesObjC (2.0.0)
   - Toast-Swift (5.0.1)
 
@@ -153,7 +152,6 @@ DEPENDENCIES:
   - GoogleAPIClientForREST/Sheets
   - GoogleSignIn
   - GTMAppAuth
-  - PPpdf417 (~> 8.0.1)
   - Toast-Swift (~> 5.0.1)
 
 SPEC REPOS:
@@ -175,7 +173,6 @@ SPEC REPOS:
     - GTMAppAuth
     - GTMSessionFetcher
     - nanopb
-    - PPpdf417
     - PromisesObjC
     - Toast-Swift
 
@@ -197,10 +194,9 @@ SPEC CHECKSUMS:
   GTMAppAuth: ad5c2b70b9a8689e1a04033c9369c4915bfcbe89
   GTMSessionFetcher: 43748f93435c2aa068b1cbe39655aaf600652e91
   nanopb: a0ba3315591a9ae0a16a309ee504766e90db0c96
-  PPpdf417: 2d7299a238b8686d7684c7174f62fe837a9422cf
   PromisesObjC: 68159ce6952d93e17b2dfe273b8c40907db5ba58
   Toast-Swift: 9b6a70f28b3bf0b96c40d46c0c4b9d6639846711
 
-PODFILE CHECKSUM: 3b81d7924980d10cd7220d491d3fae54e433d11a
+PODFILE CHECKSUM: d84a4dc2a96064404f71ef4cc44981859207d20c
 
-COCOAPODS: 1.11.2
+COCOAPODS: 1.11.3

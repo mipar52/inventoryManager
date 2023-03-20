@@ -6,7 +6,6 @@
 //
 
 import UIKit
-import Pdf417Mobi
 
 class OverlayView: UIViewController {
     
@@ -33,6 +32,7 @@ class OverlayView: UIViewController {
         print("Results are \(results)")
         let panGesture = UIPanGestureRecognizer(target: self, action: #selector(panGestureRecognizerAction))
         view.addGestureRecognizer(panGesture)
+        
         slideIdicator.roundCorners(.allCorners, radius: 10)
         uploadButton.roundCorners(.allCorners, radius: 12)
     }
@@ -46,6 +46,11 @@ class OverlayView: UIViewController {
             hasSetPointOrigin = true
             pointOrigin = self.view.frame.origin
         }
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(true)
+        NotificationCenter.default.removeObserver(self)
     }
     
     @objc func panGestureRecognizerAction(sender: UIPanGestureRecognizer) {

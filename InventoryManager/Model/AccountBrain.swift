@@ -32,6 +32,7 @@ class SignInBrain {
                } else {
                    print("No previous user!\nThis is the error: \(String(describing: error?.localizedDescription))")
                    let signInConfig = GIDConfiguration.init(clientID: K.keys.clientID)
+                   
                    GIDSignIn.sharedInstance.signIn(with: signInConfig, presenting: vc) { gUser, signInError in
                        if signInError == nil {
                            self.requestScopes(vc: vc, googleUser: gUser!) { signInSuccess in
