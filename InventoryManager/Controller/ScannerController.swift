@@ -16,16 +16,21 @@ class ScannerViewController: UIViewController {
     var headerView = UIView()
     var scannerView = UIView()
     let uiLabel = UILabel()
-    
+
     let cameraQueue = DispatchQueue(label: "cameraQueue")
+    let utils = Utils()
+    let scanBrain = ScanBrain()
+    let defaults = UserDefaults.standard
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setupViewConstraints()
+        self.utils.addToast(backgroundColor: K.colors.neutral, message: defaults.string(forKey: K.uDefaults.toastSheetName)!, vc: self)
     }
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-
+        self.scanBrain.prepareObserver(self, captureSession)
         if (captureSession?.isRunning == false) {
             cameraQueue.async { [weak self] in
                 self?.captureSession.startRunning()
@@ -33,8 +38,9 @@ class ScannerViewController: UIViewController {
         }
     }
     
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        NotificationCenter.default.removeObserver(self)
         stopScanning()
     }
     
@@ -44,7 +50,7 @@ class ScannerViewController: UIViewController {
     }
     
     func failed() {
-        let ac = UIAlertController(title: "Scanning not supported", message: "Your device does not support scanning a code from an item. Please use a device with a camera.", preferredStyle: .alert)
+        let ac = UIAlertController(title: "Scanning not supported", message: "Please use a device with a camera!", preferredStyle: .alert)
         ac.addAction(UIAlertAction(title: "OK", style: .default))
         present(ac, animated: true)
         captureSession = nil
@@ -62,7 +68,6 @@ class ScannerViewController: UIViewController {
 extension ScannerViewController: AVCaptureMetadataOutputObjectsDelegate {
     
     func startScanning() {
-        captureSession = AVCaptureSession()
         view.backgroundColor = UIColor.black
         captureSession = AVCaptureSession()
 
@@ -102,7 +107,6 @@ extension ScannerViewController: AVCaptureMetadataOutputObjectsDelegate {
         
         let label = UILabel()
         label.font = UIFont(name: "Helvetica-Bold", size: 20)
-       // label.frame = CGRect(x: 100, y: 200, width: scannerOverlayPreviewLayer.bounds.width, height: scannerOverlayPreviewLayer.bounds.height)
         label.frame = CGRect(x: scannerOverlayPreviewLayer.frame.origin.x + 100, y: scannerOverlayPreviewLayer.frame.origin.y + 150, width: scannerOverlayPreviewLayer.bounds.width, height: scannerOverlayPreviewLayer.bounds.height )
         label.text = "Scan the QR code"
         label.textColor = UIColor.white
@@ -167,6 +171,7 @@ extension ScannerViewController: UIViewControllerTransitioningDelegate {
         if #available(iOS 15.0, *) {
             slideVC.sheetPresentationController?.detents = [.medium()]
         }
+        
         slideVC.results = qrCodeResult
         slideVC.modalPresentationStyle = .automatic
         slideVC.transitioningDelegate = self

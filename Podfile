@@ -14,7 +14,6 @@ target 'InventoryManager' do
   pod 'GTMAppAuth'
   pod 'GoogleAPIClientForREST/Drive'
   pod 'GoogleAPIClientForREST/Sheets'
-  pod 'PPpdf417', '~> 8.0.1'
   pod 'Toast-Swift', '~> 5.0.1'
   # Pods for InventoryManager
 

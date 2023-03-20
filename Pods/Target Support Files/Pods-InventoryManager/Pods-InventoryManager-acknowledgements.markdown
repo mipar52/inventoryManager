@@ -2966,12 +2966,6 @@ More information at <a href="http://landonf.org/2009/02/index.html">Landon
 Fuller's blog</a>
 
 
-## PPpdf417
-
-© 2013-2015 MicroBlink Ltd. All rights reserved.
-For full license text, visit http://pdf417.mobi/doc/PDF417license.pdf
-
-
 ## PromisesObjC
 
 
