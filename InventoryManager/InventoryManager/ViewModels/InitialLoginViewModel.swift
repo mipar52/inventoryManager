@@ -16,6 +16,15 @@ class InitialLoginViewModel: ObservableObject {
     init(userDefault: UserDefaults = .standard) {
         self.userDefaults = userDefault
     }
+    
+    func performLogin() async throws {
+        do {
+            try await GoogleAuthManager.shared.signIn()
+            finishedOnboarding()
+        } catch {
+            return
+        }
+    }
         
     func finishedOnboarding() {
         userDefaults.set(false, forKey: UserDefaultsConstants.isUserFirstTime)

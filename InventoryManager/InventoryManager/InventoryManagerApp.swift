@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import GoogleSignIn
 
 @main
 struct InventoryManagerApp: App {
@@ -16,12 +17,17 @@ struct InventoryManagerApp: App {
         WindowGroup {
             #if DEBUG
             InitialLoginScreen()
+                .handleGoogleRestoreSignIn()
             #else
-            if isUserFirstTime {
-                InitialLoginScreen()
-            } else {
-                MainView()
+            Group {
+                if isUserFirstTime {
+                    InitialLoginScreen()
+                        
+                } else {
+                    MainView()
+                }
             }
+            .handleGoogleRestoreSignIn()
             #endif
            // ContentView()
            //     .environment(\.managedObjectContext, persistenceController.container.viewContext)

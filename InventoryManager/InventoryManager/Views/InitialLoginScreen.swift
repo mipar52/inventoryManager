@@ -10,7 +10,7 @@ import GoogleSignInSwift
 
 struct InitialLoginScreen: View {
     @StateObject private var viewModel = InitialLoginViewModel()
-    
+    @State private var isLoading: Bool = false
     var body: some View {
         NavigationStack {
             ZStack {
@@ -32,15 +32,7 @@ struct InitialLoginScreen: View {
                         .foregroundColor(.white)
                         .padding(.horizontal, 24)
                     
-                    Button {
-                        viewModel.finishedOnboarding()
-                    } label: {
-                        SimpleHorizontalView(labelText: "Skip", uiImageText: "arrow.right.circle")
-                            .padding(.horizontal, 24)
-                    }
-                    
                     Spacer().frame(height:40)
-                    
                     
                     VStack(spacing: 20) {
                         
@@ -58,14 +50,29 @@ struct InitialLoginScreen: View {
                     HStack {
                         Spacer()
                         GoogleSignInButton {
-                            viewModel.finishedOnboarding()
+                            isLoading.toggle()
+                            defer { isLoading.toggle() }
+                            Task {
+                                do {
+                                    try await viewModel.performLogin()
+                                } catch {
+                                    
+                                }
+                            }
                         }
                         .frame(width: 100, height: 50)
                         Spacer()
                     }
                     
+                    Button {
+                        viewModel.finishedOnboarding()
+                    } label: {
+                        SimpleHorizontalView(labelText: "Skip", uiImageText: "arrow.right.circle")
+                            .padding(.horizontal, 24)
+                    }
                     Spacer().frame(height: 40)
                 }
+                .withLoadingOverlay($isLoading)
                 .navigationDestination(isPresented: $viewModel.shouldNavigateToMainView) {
                     MainView()
                 }

@@ -9,15 +9,30 @@
 /* Begin PBXBuildFile section */
 		A1146F522E3D1A4B00EF433B /* GoogleSignIn in Frameworks */ = {isa = PBXBuildFile; productRef = A1146F512E3D1A4B00EF433B /* GoogleSignIn */; };
 		A1146F542E3D1A4B00EF433B /* GoogleSignInSwift in Frameworks */ = {isa = PBXBuildFile; productRef = A1146F532E3D1A4B00EF433B /* GoogleSignInSwift */; };
+		A1146FA52E3D71C100EF433B /* GoogleAPIClientForREST_Drive in Frameworks */ = {isa = PBXBuildFile; productRef = A1146FA42E3D71C100EF433B /* GoogleAPIClientForREST_Drive */; };
+		A1146FA72E3D71C700EF433B /* GoogleAPIClientForREST_Sheets in Frameworks */ = {isa = PBXBuildFile; productRef = A1146FA62E3D71C700EF433B /* GoogleAPIClientForREST_Sheets */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		A1146F2C2E3D08B200EF433B /* InventoryManager.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = InventoryManager.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		A1146F992E3D65ED00EF433B /* Exceptions for "InventoryManager" folder in "InventoryManager" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = A1146F2B2E3D08B200EF433B /* InventoryManager */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		A1146F2E2E3D08B200EF433B /* InventoryManager */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				A1146F992E3D65ED00EF433B /* Exceptions for "InventoryManager" folder in "InventoryManager" target */,
+			);
 			path = InventoryManager;
 			sourceTree = "<group>";
 		};
@@ -28,8 +43,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A1146FA52E3D71C100EF433B /* GoogleAPIClientForREST_Drive in Frameworks */,
 				A1146F522E3D1A4B00EF433B /* GoogleSignIn in Frameworks */,
 				A1146F542E3D1A4B00EF433B /* GoogleSignInSwift in Frameworks */,
+				A1146FA72E3D71C700EF433B /* GoogleAPIClientForREST_Sheets in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -40,6 +57,7 @@
 			isa = PBXGroup;
 			children = (
 				A1146F2E2E3D08B200EF433B /* InventoryManager */,
+				A1146FA32E3D71C100EF433B /* Frameworks */,
 				A1146F2D2E3D08B200EF433B /* Products */,
 			);
 			sourceTree = "<group>";
@@ -50,6 +68,13 @@
 				A1146F2C2E3D08B200EF433B /* InventoryManager.app */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		A1146FA32E3D71C100EF433B /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -74,6 +99,8 @@
 			packageProductDependencies = (
 				A1146F512E3D1A4B00EF433B /* GoogleSignIn */,
 				A1146F532E3D1A4B00EF433B /* GoogleSignInSwift */,
+				A1146FA42E3D71C100EF433B /* GoogleAPIClientForREST_Drive */,
+				A1146FA62E3D71C700EF433B /* GoogleAPIClientForREST_Sheets */,
 			);
 			productName = InventoryManager;
 			productReference = A1146F2C2E3D08B200EF433B /* InventoryManager.app */;
@@ -270,6 +297,7 @@
 				DEVELOPMENT_TEAM = 73YN9D8LV2;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = InventoryManager/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -300,6 +328,7 @@
 				DEVELOPMENT_TEAM = 73YN9D8LV2;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = InventoryManager/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -371,6 +400,16 @@
 			isa = XCSwiftPackageProductDependency;
 			package = A1146F502E3D1A4B00EF433B /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */;
 			productName = GoogleSignInSwift;
+		};
+		A1146FA42E3D71C100EF433B /* GoogleAPIClientForREST_Drive */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A1146F562E3D1B3D00EF433B /* XCRemoteSwiftPackageReference "google-api-objectivec-client-for-rest" */;
+			productName = GoogleAPIClientForREST_Drive;
+		};
+		A1146FA62E3D71C700EF433B /* GoogleAPIClientForREST_Sheets */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A1146F562E3D1B3D00EF433B /* XCRemoteSwiftPackageReference "google-api-objectivec-client-for-rest" */;
+			productName = GoogleAPIClientForREST_Sheets;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
