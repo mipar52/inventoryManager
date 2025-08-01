@@ -6,6 +6,11 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		A1146F522E3D1A4B00EF433B /* GoogleSignIn in Frameworks */ = {isa = PBXBuildFile; productRef = A1146F512E3D1A4B00EF433B /* GoogleSignIn */; };
+		A1146F542E3D1A4B00EF433B /* GoogleSignInSwift in Frameworks */ = {isa = PBXBuildFile; productRef = A1146F532E3D1A4B00EF433B /* GoogleSignInSwift */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
 		A1146F2C2E3D08B200EF433B /* InventoryManager.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = InventoryManager.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -23,6 +28,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A1146F522E3D1A4B00EF433B /* GoogleSignIn in Frameworks */,
+				A1146F542E3D1A4B00EF433B /* GoogleSignInSwift in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -65,6 +72,8 @@
 			);
 			name = InventoryManager;
 			packageProductDependencies = (
+				A1146F512E3D1A4B00EF433B /* GoogleSignIn */,
+				A1146F532E3D1A4B00EF433B /* GoogleSignInSwift */,
 			);
 			productName = InventoryManager;
 			productReference = A1146F2C2E3D08B200EF433B /* InventoryManager.app */;
@@ -94,6 +103,10 @@
 			);
 			mainGroup = A1146F232E3D08B100EF433B;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				A1146F502E3D1A4B00EF433B /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */,
+				A1146F562E3D1B3D00EF433B /* XCRemoteSwiftPackageReference "google-api-objectivec-client-for-rest" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = A1146F2D2E3D08B200EF433B /* Products */;
 			projectDirPath = "";
@@ -328,6 +341,38 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		A1146F502E3D1A4B00EF433B /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/google/GoogleSignIn-iOS";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 9.0.0;
+			};
+		};
+		A1146F562E3D1B3D00EF433B /* XCRemoteSwiftPackageReference "google-api-objectivec-client-for-rest" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/google/google-api-objectivec-client-for-rest.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		A1146F512E3D1A4B00EF433B /* GoogleSignIn */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A1146F502E3D1A4B00EF433B /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */;
+			productName = GoogleSignIn;
+		};
+		A1146F532E3D1A4B00EF433B /* GoogleSignInSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A1146F502E3D1A4B00EF433B /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */;
+			productName = GoogleSignInSwift;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = A1146F242E3D08B100EF433B /* Project object */;
 }

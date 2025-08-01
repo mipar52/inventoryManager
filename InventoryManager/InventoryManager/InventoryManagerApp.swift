@@ -10,11 +10,21 @@ import SwiftUI
 @main
 struct InventoryManagerApp: App {
     let persistenceController = PersistenceController.shared
-
+    @AppStorage(UserDefaultsConstants.isUserFirstTime) var isUserFirstTime: Bool = true
+    
     var body: some Scene {
         WindowGroup {
-            ContentView()
-                .environment(\.managedObjectContext, persistenceController.container.viewContext)
+            #if DEBUG
+            InitialLoginScreen()
+            #else
+            if isUserFirstTime {
+                InitialLoginScreen()
+            } else {
+                MainView()
+            }
+            #endif
+           // ContentView()
+           //     .environment(\.managedObjectContext, persistenceController.container.viewContext)
         }
     }
 }
