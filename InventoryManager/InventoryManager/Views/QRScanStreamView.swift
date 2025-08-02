@@ -1,0 +1,65 @@
+//
+//  QRScanStreamView.swift
+//  InventoryManager
+//
+//  Created by Milan Parađina on 02.08.2025..
+//
+
+import SwiftUI
+
+struct QRScanStreamView: View {
+    @StateObject var service = QRScannerService()
+    @State var showFlashToast = false
+    
+    var body: some View {
+        ZStack {
+            ScannerView(scannerService: service)
+
+            VStack {
+                HStack {
+                    Spacer()
+                    Button {
+                        service.toggleFlashlight()
+                        if service.flashlightPressed {
+                            showFlashToast.toggle()
+                        }
+                    } label: {
+                        
+                        Image(systemName: service.flashlightPressed ? "flashlight.off.circle.fill" : "flashlight.slash.circle")
+                            .font(.largeTitle)
+                            .padding()
+                            .background(.ultraThinMaterial)
+                            .clipShape(Circle())
+                    }
+                    .padding()
+                    .padding(.top, 30)
+                }
+
+                Spacer()
+                if showFlashToast {
+                    ToastView(labelText: "Watch out for glare!")
+                        .onAppear {
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                                showFlashToast.toggle()
+                            }
+                        }
+                        .transition(.move(edge: .top).combined(with: .opacity))
+                        .animation(.easeOut(duration: 0.3), value: showFlashToast)
+                        
+                }
+                if let code = service.scannedCode {
+                    ToastView(labelText: code)
+                        .hoverEffect()
+                }
+            }
+        }
+      //  .ignoresSafeArea()
+        .onAppear { service.startSession() }
+        .onDisappear { service.stopSession() }
+        }
+    }
+
+
+#Preview {
+    QRScanStreamView()
+}
