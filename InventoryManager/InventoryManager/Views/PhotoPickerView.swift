@@ -29,7 +29,7 @@ struct PhotoPickerView: View {
                     Button {
                         scannerViewModel.decodeQrCode(from: image)
                     } label: {
-                        Text("Process image")
+                        Text("Send to sheets")
                     }
                     
                     if let qrCodeResult = scannerViewModel.qrCodeResult {
@@ -54,6 +54,12 @@ struct PhotoPickerView: View {
                     showToastError.toggle()
                 }
             }
+        }
+        .sheet(isPresented: $scannerViewModel.showQrCodeResult) {
+            QRCodeResultScreen(viewModel: scannerViewModel)
+                .presentationDetents([.medium])
+                .presentationDragIndicator(.visible)
+                .padding()
         }
     }
 }

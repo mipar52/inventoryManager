@@ -10,6 +10,7 @@ import SwiftUI
 struct QRScanStreamView: View {
     @StateObject var scannerViewModel: ScannerViewModel
     @State var showFlashToast = false
+    @State var showQrResultScreen = false
     
     var body: some View {
         ZStack {
@@ -47,15 +48,26 @@ struct QRScanStreamView: View {
                         .animation(.easeOut(duration: 0.3), value: showFlashToast)
                         
                 }
-                if let code = scannerViewModel.qrCodeResult {
-                    ToastView(labelText: code)
-                        .hoverEffect()
-                }
+//                if let code = scannerViewModel.qrCodeResult {
+//                    ToastView(labelText: code)
+//                        .hoverEffect()
+//                }
             }
         }
       //  .ignoresSafeArea()
         .onAppear { scannerViewModel.startScanningSession() }
         .onDisappear { scannerViewModel.stopScanningSession() }
+        .sheet(isPresented: $scannerViewModel.showQrCodeResult, onDismiss: {
+            scannerViewModel.qrCodeResult = nil
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                scannerViewModel.startScanningSession()
+            }
+        }) {
+            QRCodeResultScreen(viewModel: scannerViewModel)
+                .presentationDetents([.medium])
+                .presentationDragIndicator(.visible)
+                .padding()
+        }
         }
     }
 

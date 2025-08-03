@@ -35,13 +35,16 @@ actor GoogleAuthManager {
         GIDSignIn.sharedInstance.handle(url)
     }
     
-    func restoreTokenIfNeeded() async throws -> GTLRSheetsService {
+    func restoreTokenIfNeeded<T: GTLRService>(_ type: T.Type) async throws -> T {
         guard let user = googleUser else { throw GoogleAuthError.NotSignedIn }
-        guard let sheetsService = self.sheetsService else { throw GoogleAuthError.ServiceUnavailable }
+        let accessToken = user.accessToken.tokenString
         let authorizer = try await user.refreshTokensIfNeeded()
+
+        let service = T()
+        service.additionalHTTPHeaders = ["Authorization": "Bearer \(accessToken)"]
+        service.authorizer = authorizer.fetcherAuthorizer
         
-        sheetsService.authorizer = authorizer.fetcherAuthorizer
-        return sheetsService
+        return service
     }
     
     func signIn() async throws -> GIDSignInResult {
