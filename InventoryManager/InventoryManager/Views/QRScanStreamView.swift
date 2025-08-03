@@ -18,6 +18,7 @@ struct QRScanStreamView: View {
 
             VStack {
                 HStack {
+                    SpreadsheetPicker(viewModel: scannerViewModel)
                     Spacer()
                     Button {
                         scannerViewModel.toggleFlashlight()
@@ -55,7 +56,17 @@ struct QRScanStreamView: View {
             }
         }
       //  .ignoresSafeArea()
-        .onAppear { scannerViewModel.startScanningSession() }
+        .onAppear {
+            scannerViewModel.startScanningSession()
+            Task {
+                do {
+                    try await scannerViewModel.configureGoogleDrive()
+                    try await scannerViewModel.getSpreadsheets()
+                } catch {
+                    debugPrint("[GoogleDriveService] - \(error.localizedDescription)")
+                }
+            }
+        }
         .onDisappear { scannerViewModel.stopScanningSession() }
         .sheet(isPresented: $scannerViewModel.showQrCodeResult, onDismiss: {
             scannerViewModel.qrCodeResult = nil
