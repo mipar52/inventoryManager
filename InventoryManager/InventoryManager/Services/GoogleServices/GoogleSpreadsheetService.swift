@@ -10,7 +10,6 @@ import GoogleAPIClientForREST_Sheets
 
 actor GoogleSpreadsheetService {
     private(set) var sheetsService: GTLRSheetsService?
-    
     func configure() async throws {
         do {
             self.sheetsService = try await GoogleAuthManager.shared.restoreTokenIfNeeded(GTLRSheetsService.self)
@@ -43,4 +42,40 @@ actor GoogleSpreadsheetService {
                 }
             }
         }
-}
+    
+    func getSheetsFromSpreadsheet(from spreadsheetId: String) async throws -> [GoogleSheet] {
+        guard let sheetsService = sheetsService else {
+            throw GoogleAuthError.NotSignedIn
+        }
+
+        let query = GTLRSheetsQuery_SpreadsheetsGet.query(withSpreadsheetId: spreadsheetId)
+
+        return try await withCheckedThrowingContinuation { continuation in
+            sheetsService.executeQuery(query) { (ticket, result, error) in
+                if let error = error {
+                    continuation.resume(throwing: error)
+                    return
+                }
+
+                guard let result = result as? GTLRSheets_Spreadsheet,
+                      let sheets = result.sheets else {
+                    continuation.resume(throwing: GoogleAuthError.ServiceUnavailable)
+                    return
+                }
+
+                debugPrint("[GoogleSpreadsheetService] - Found \(sheets.count) sheets in spreadsheet: \(spreadsheetId)")
+
+                let sheetModels = sheets.compactMap {
+                    GoogleSheet(
+                        id: $0.properties?.sheetId?.stringValue ?? "",
+                        name: $0.properties?.title ?? ""
+                    )
+                }
+
+                continuation.resume(returning: sheetModels)
+            }
+        }
+    }
+
+    }
+

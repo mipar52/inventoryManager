@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct QRCodeResultScreen: View {
-    @Environment (\.dismiss) var dismiss
+    @Environment(\.dismiss) var dismiss
     
     @ObservedObject var viewModel: ScannerViewModel
     @State var showErrorToast: Bool = false

@@ -17,6 +17,7 @@ struct PhotoPickerView: View {
     
     var body: some View {
         VStack {
+            SpreadsheetPicker(viewModel: scannerViewModel)
             PhotosPicker("Pick a photo", selection: $item, matching: .images)
             if let image = uiImage {
                 VStack {

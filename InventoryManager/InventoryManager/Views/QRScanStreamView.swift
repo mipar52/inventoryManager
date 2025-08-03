@@ -33,6 +33,7 @@ struct QRScanStreamView: View {
                             .background(.ultraThinMaterial)
                             .clipShape(Circle())
                     }
+
                     .padding()
                     .padding(.top, 30)
                 }

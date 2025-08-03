@@ -9,39 +9,55 @@ import Foundation
 import GoogleAPIClientForREST_Drive
 import GoogleAPIClientForREST_Sheets
 
-actor GoogleDriveService {
+
+final class GoogleDriveService: ObservableObject {
+   @Published private(set) var spreadsheets: [GoogleSpreadsheet] = []
+   @Published private(set) var selectedSpreadsheet: GoogleSpreadsheet?
+    
     private var driveService: GTLRDriveService?
+    private var spreadsheetService = GoogleSpreadsheetService()
     
     func configure() async throws {
         do {
             self.driveService = try await GoogleAuthManager.shared.restoreTokenIfNeeded(GTLRDriveService.self)
+            try await self.spreadsheetService.configure()
         } catch {
             debugPrint("[GoogleDriveService] - Error initializing Google Sheets service: \(error)")
         }
     }
     
-    func retriveSpreadsheetsFromDrive() async throws -> [GoogleSpreadsheet] {
+    func retriveSpreadsheetsFromDrive() async throws {
         guard let driveService = self.driveService else { throw GoogleAuthError.ServiceUnavailable }
+        
         let query = GTLRDriveQuery_FilesList.query()
         query.q = "mimeType='application/vnd.google-apps.spreadsheet' and trashed=false"
        
-        return try await withCheckedThrowingContinuation { continuation in
+        return try await withCheckedThrowingContinuation { [weak self] continuation in
             driveService.executeQuery(query, completionHandler: { ticket, files, error in
                 if error == nil {
-                    let list = files as! GTLRDrive_FileList
-                    let listFiles = list.files
-                    var spreadsheetArray: [GoogleSpreadsheet] = []
-                    if let items = listFiles {
-                        for item in items {
+                    guard let list = files as? GTLRDrive_FileList,
+                          let listFiles = list.files else {
+                        continuation.resume(throwing: GoogleAuthError.ServiceUnavailable)
+                        return
+                    }
+                    
+                    Task {
+                        for item in listFiles {
                             if let name = item.name,
-                               let id = item.identifier {
-                                let newSpreadsheet = GoogleSpreadsheet(id: id, name: name)
-                                spreadsheetArray.append(newSpreadsheet)
+                               let id = item.identifier,
+                               let sheets = try await self?.spreadsheetService.getSheetsFromSpreadsheet(from: id) {
+                                let newSpreadsheet =
+                                GoogleSpreadsheet(
+                                    id: id,
+                                    name: name,
+                                    sheets: sheets)
+                                self?.spreadsheets.append(newSpreadsheet)
+                                
                             }
                             
                         }
                     }
-                    continuation.resume(returning: spreadsheetArray)
+                    continuation.resume()
                 } else {
                     if let error = error {
                         continuation.resume(throwing: error)

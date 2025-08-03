@@ -17,7 +17,6 @@ struct MainView: View {
             } label: {
                 TabLabelView(uiImageString: "barcode.viewfinder", labelString: "Scan")
             }
-            
             Tab {
                 ScanHistoryView()
             } label: {

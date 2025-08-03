@@ -19,10 +19,11 @@ class ScannerViewModel: NSObject, ObservableObject {
     }
     @Published var showQrCodeResult: Bool = false
     @Published var selectedSpreadsheet: GoogleSpreadsheet?
+    @Published var selectedSheet: GoogleSheet?
     @Published var spreadsheets: [GoogleSpreadsheet]?
     
     private var spreadsheetsService: GoogleSpreadsheetService
-    private var driveService: GoogleDriveService
+    @Published private var driveService: GoogleDriveService
     private var cancellables = Set<AnyCancellable>() // -> don't need it as assing is being used now
     
     init(
@@ -47,6 +48,15 @@ class ScannerViewModel: NSObject, ObservableObject {
                 }
                 .store(in: &cancellables)
         
+        driveService.$spreadsheets
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] spredsheets in
+                self?.spreadsheets = spredsheets
+                self?.selectedSpreadsheet = spredsheets.first
+                self?.selectedSheet = self?.selectedSpreadsheet?.sheets.first
+            }
+            .store(in: &cancellables)
+        
 //        qrCodeScannerService.$scannedCode
 //            .receive(on: DispatchQueue.main)
 //            .assign(to: &$qrCodeResult)
@@ -62,8 +72,7 @@ class ScannerViewModel: NSObject, ObservableObject {
     }
     
     func getSpreadsheets() async throws {
-        spreadsheets = try await self.driveService.retriveSpreadsheetsFromDrive()
-        selectedSpreadsheet = spreadsheets?.first
+        try await self.driveService.retriveSpreadsheetsFromDrive()
     }
     
     func appendToSpreadsheet() async throws {
