@@ -7,13 +7,13 @@
 
 import Foundation
 import AVFoundation
+import UIKit
 
 final class QRScannerService: NSObject, ObservableObject {
     private let session = AVCaptureSession()
     private let metadataOutput = AVCaptureMetadataOutput()
     
     @Published var scannedCode: String?
-    @Published var flashlightPressed: Bool = false
     
     func startSession() {
         guard let videoDevice = AVCaptureDevice.default(for: .video),
@@ -45,7 +45,7 @@ final class QRScannerService: NSObject, ObservableObject {
         session.stopRunning()
     }
     
-    func toggleFlashlight() {
+    func toggleFlashlight(status flaslightStatus: Bool) {
         guard let device = AVCaptureDevice.default(for: .video),
               device.hasTorch else {
             debugPrint("[QRScannerService] - device has not flashlight!")
@@ -54,8 +54,7 @@ final class QRScannerService: NSObject, ObservableObject {
 
         do {
             try device.lockForConfiguration()
-            flashlightPressed.toggle()
-            device.torchMode = flashlightPressed ? .on : .off
+            device.torchMode = flaslightStatus ? .on : .off
             device.unlockForConfiguration()
         } catch {
             print("[QRScannerService] Failed to toggle flashlight: \(error)")
@@ -66,6 +65,17 @@ final class QRScannerService: NSObject, ObservableObject {
         let layer = AVCaptureVideoPreviewLayer(session: session)
         layer.videoGravity = .resizeAspectFill
         return layer
+    }
+    
+    /// Used for the image picker
+    func decodeQRCodeFromStaticImage(from image: UIImage) {
+        guard let ciImage = CIImage(image: image) else { return }
+        let context = CIContext()
+        let detector = CIDetector(ofType: CIDetectorTypeQRCode, context: context, options: nil)
+        if let features = detector?.features(in: ciImage),
+           let qrCodeFeatures = features.first as? CIQRCodeFeature {
+            scannedCode = qrCodeFeatures.messageString
+        }
     }
 }
 

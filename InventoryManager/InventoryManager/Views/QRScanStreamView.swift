@@ -8,24 +8,24 @@
 import SwiftUI
 
 struct QRScanStreamView: View {
-    @StateObject var service = QRScannerService()
+    @StateObject var scannerViewModel: ScannerViewModel
     @State var showFlashToast = false
     
     var body: some View {
         ZStack {
-            ScannerView(scannerService: service)
+            ScannerView(scannerViewModel: scannerViewModel)
 
             VStack {
                 HStack {
                     Spacer()
                     Button {
-                        service.toggleFlashlight()
-                        if service.flashlightPressed {
+                        scannerViewModel.toggleFlashlight()
+                        if scannerViewModel.flashlightPressed {
                             showFlashToast.toggle()
                         }
                     } label: {
                         
-                        Image(systemName: service.flashlightPressed ? "flashlight.off.circle.fill" : "flashlight.slash.circle")
+                        Image(systemName: scannerViewModel.flashlightPressed ? "flashlight.off.circle.fill" : "flashlight.slash.circle")
                             .font(.largeTitle)
                             .padding()
                             .background(.ultraThinMaterial)
@@ -47,19 +47,19 @@ struct QRScanStreamView: View {
                         .animation(.easeOut(duration: 0.3), value: showFlashToast)
                         
                 }
-                if let code = service.scannedCode {
+                if let code = scannerViewModel.qrCodeResult {
                     ToastView(labelText: code)
                         .hoverEffect()
                 }
             }
         }
       //  .ignoresSafeArea()
-        .onAppear { service.startSession() }
-        .onDisappear { service.stopSession() }
+        .onAppear { scannerViewModel.startScanningSession() }
+        .onDisappear { scannerViewModel.stopScanningSession() }
         }
     }
 
 
 #Preview {
-    QRScanStreamView()
+    QRScanStreamView(scannerViewModel: ScannerViewModel())
 }

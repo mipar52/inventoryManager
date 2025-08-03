@@ -7,15 +7,23 @@
 
 import SwiftUI
 
-struct ScanPickerView: View {    
+struct ScanPickerView: View {
+   @ObservedObject var scannerViewModel: ScannerViewModel = ScannerViewModel()
+    
     var body: some View {
         
         NavigationView {
             VStack {
                 NavigationLink {
-                    QRScanStreamView()
+                    QRScanStreamView(scannerViewModel: scannerViewModel)
                 } label: {
                     Text("Scanner")
+                }
+                
+                NavigationLink {
+                    PhotoPickerView(scannerViewModel: scannerViewModel)
+                } label: {
+                    Text("Photo picker")
                 }
             }
         }

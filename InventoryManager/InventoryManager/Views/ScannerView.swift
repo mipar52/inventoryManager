@@ -8,11 +8,11 @@
 import SwiftUI
 
 struct ScannerView: UIViewRepresentable {
-    @ObservedObject var scannerService: QRScannerService
+    @ObservedObject var scannerViewModel: ScannerViewModel
 
     func makeUIView(context: Context) -> UIView {
         let view = UIView()
-        let previewLayer = scannerService.getPreviewLayer()
+        let previewLayer = scannerViewModel.getPreviewLayer()
         previewLayer.frame = UIScreen.main.bounds
         view.layer.addSublayer(previewLayer)
         return view
