@@ -10,7 +10,7 @@ import GoogleSignIn
 
 @main
 struct InventoryManagerApp: App {
-    let persistenceController = PersistenceController.shared
+    @StateObject private var databaseService = DatabaseService()
     @AppStorage(UserDefaultsConstants.isUserFirstTime) var isUserFirstTime: Bool = true
     
     var body: some Scene {
@@ -18,6 +18,8 @@ struct InventoryManagerApp: App {
             #if DEBUG
             InitialLoginScreen()
                 .handleGoogleRestoreSignIn()
+                .environment(\.managedObjectContext, databaseService.container.viewContext)
+                .environmentObject(databaseService)
             #else
             Group {
                 if isUserFirstTime {
@@ -28,6 +30,8 @@ struct InventoryManagerApp: App {
                 }
             }
             .handleGoogleRestoreSignIn()
+            .environment(\.managedObjectContext, databaseService.container.viewContext)
+            .environmentObject(databaseService)
             #endif
            // ContentView()
            //     .environment(\.managedObjectContext, persistenceController.container.viewContext)
