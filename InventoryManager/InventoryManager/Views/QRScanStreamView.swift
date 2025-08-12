@@ -11,7 +11,8 @@ struct QRScanStreamView: View {
     @StateObject var scannerViewModel: ScannerViewModel
     @State var showFlashToast = false
     @State var showQrResultScreen = false
-    
+    @EnvironmentObject private var db: DatabaseService
+
     var body: some View {
         ZStack {
             ScannerView(scannerViewModel: scannerViewModel)
@@ -59,14 +60,6 @@ struct QRScanStreamView: View {
       //  .ignoresSafeArea()
         .onAppear {
             scannerViewModel.startScanningSession()
-            Task {
-                do {
-                    try await scannerViewModel.configureGoogleDrive()
-                    try await scannerViewModel.getSpreadsheets()
-                } catch {
-                    debugPrint("[GoogleDriveService] - \(error.localizedDescription)")
-                }
-            }
         }
         .onDisappear { scannerViewModel.stopScanningSession() }
         .sheet(isPresented: $scannerViewModel.showQrCodeResult, onDismiss: {
@@ -85,5 +78,5 @@ struct QRScanStreamView: View {
 
 
 #Preview {
-    QRScanStreamView(scannerViewModel: ScannerViewModel())
+   // QRScanStreamView(scannerViewModel: ScannerViewModel())
 }

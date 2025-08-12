@@ -66,5 +66,5 @@ struct PhotoPickerView: View {
 }
 
 #Preview {
-    PhotoPickerView(scannerViewModel: ScannerViewModel())
+   // PhotoPickerView(scannerViewModel: ScannerViewModel())
 }

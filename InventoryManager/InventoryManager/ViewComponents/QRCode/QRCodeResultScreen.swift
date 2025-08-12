@@ -66,5 +66,5 @@ struct QRCodeResultScreen: View {
 }
 
 #Preview {
-    QRCodeResultScreen(viewModel: ScannerViewModel())
+  //  QRCodeResultScreen(viewModel: ScannerViewModel())
 }

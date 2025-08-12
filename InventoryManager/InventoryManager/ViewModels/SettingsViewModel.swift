@@ -11,9 +11,17 @@ import GoogleSignIn
 
 @MainActor
 class SettingsViewModel: ObservableObject {
+    
     @Published var isSignedIn: Bool = false
     @Published var username: String = ""
     @Published var userImage: UIImage? = nil
+    
+    private var googleDriveService: GoogleDriveService?
+    
+    func configureViewModel(with db: DatabaseService) async throws {
+        googleDriveService = GoogleDriveService(db: db)
+        try await googleDriveService?.configure()
+    }
     
     func syncFromGoogleAuthManager () async {
         do {
@@ -39,7 +47,7 @@ class SettingsViewModel: ObservableObject {
     }
     
     func signIn() async throws {
-        let result = try await GoogleAuthManager.shared.signIn()
+        let _ = try await GoogleAuthManager.shared.signIn()
         await syncFromGoogleAuthManager()
     }
     
@@ -48,5 +56,9 @@ class SettingsViewModel: ObservableObject {
         self.username = "Not signed in"
         self.userImage = nil
         self.isSignedIn = false
+    }
+    
+    func syncGoogleSpreadsheets() async throws {
+        try await googleDriveService?.retriveSpreadsheetsFromDrive()
     }
 }

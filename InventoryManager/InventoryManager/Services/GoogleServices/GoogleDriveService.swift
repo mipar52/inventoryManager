@@ -10,12 +10,14 @@ import GoogleAPIClientForREST_Drive
 import GoogleAPIClientForREST_Sheets
 
 
-final class GoogleDriveService: ObservableObject {
-   @Published private(set) var spreadsheets: [GoogleSpreadsheet] = []
-   @Published private(set) var selectedSpreadsheet: GoogleSpreadsheet?
-    
+final class GoogleDriveService {
+    private let db: DatabaseService
     private var driveService: GTLRDriveService?
     private var spreadsheetService = GoogleSpreadsheetService()
+    
+    init(db: DatabaseService) {
+        self.db = db
+    }
     
     func configure() async throws {
         do {
@@ -46,15 +48,12 @@ final class GoogleDriveService: ObservableObject {
                             if let name = item.name,
                                let id = item.identifier,
                                let sheets = try await self?.spreadsheetService.getSheetsFromSpreadsheet(from: id) {
-                                let newSpreadsheet =
-                                GoogleSpreadsheet(
-                                    id: id,
-                                    name: name,
-                                    sheets: sheets)
-                                self?.spreadsheets.append(newSpreadsheet)
-                                
+                                if let spreadsheet = try await self?.db.createSpreadsheet(spreadsheetId: id, spreadsheetName: name) {
+                                    for sheet in sheets {
+                                        try await self?.db.createSheet(sheetId: sheet.id, sheetName: sheet.name, spreadsheet: spreadsheet)
+                                    }
+                                }
                             }
-                            
                         }
                     }
                     continuation.resume()

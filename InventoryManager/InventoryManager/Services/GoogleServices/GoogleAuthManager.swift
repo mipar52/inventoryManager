@@ -62,8 +62,8 @@ actor GoogleAuthManager {
                             continuation.resume(returning: result)
                         }
                     } else {
-                        continuation.resume(throwing: GoogleAuthError.SignInError(error: signInError?.localizedDescription))
                         debugPrint("[GoogleSignInError] - Error with sign in: \(signInError?.localizedDescription ?? "No error description")")
+                        continuation.resume(throwing: GoogleAuthError.SignInError(error: signInError?.localizedDescription))
                     }
                 }
         }

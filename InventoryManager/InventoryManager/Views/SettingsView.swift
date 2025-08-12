@@ -8,7 +8,9 @@
 import SwiftUI
 
 struct SettingsView: View {
+    @EnvironmentObject private var db: DatabaseService
     @StateObject var viewModel = SettingsViewModel()
+    
     var body: some View {
         VStack {
             GoogleUserView(userImage: viewModel.userImage, userName: viewModel.username, isSignedIn: viewModel.isSignedIn)
@@ -25,14 +27,30 @@ struct SettingsView: View {
                         }
                     }
                 }
+            Button {
+                Task {
+                    do {
+                        try await viewModel.syncGoogleSpreadsheets()
+                    } catch {
+                        debugPrint("Error: \(error.localizedDescription)")
+                    }
+                }
+            } label: {
+                Text("Sync Google Spreadsheets")
+            }
         }
         .onAppear {
             Task {
-                await viewModel.syncFromGoogleAuthManager()
+                do {
+                    try await viewModel.configureViewModel(with: db)
+                    await viewModel.syncFromGoogleAuthManager()
+                } catch {
+                    debugPrint("[SettingsVM] - error: \(error.localizedDescription)")
+                }
+            }
+
             }
         }
-
-    }
 }
 
 #Preview {
