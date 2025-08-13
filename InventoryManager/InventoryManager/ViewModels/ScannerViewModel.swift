@@ -23,6 +23,7 @@ class ScannerViewModel: NSObject, ObservableObject {
     @Published var spreadsheets: [GoogleSpreadsheet]?
     
     private var spreadsheetsService: GoogleSpreadsheetService
+    private(set) var dbService: DatabaseService?
     
     private var cancellables = Set<AnyCancellable>() // -> don't need it as assing is being used now
     
@@ -61,13 +62,21 @@ class ScannerViewModel: NSObject, ObservableObject {
         
     }
     
-    func configureGoogleService() async throws {
+    func configureGoogleService(_ dbService: DatabaseService) async throws {
         try await self.spreadsheetsService.configure()
+        self.dbService = dbService
     }
     
     func appendToSpreadsheet() async throws {
         if let result = qrCodeResult {
             try await self.spreadsheetsService.appendDataToSheet(qrCodeData: result)
+        }
+    }
+    
+    @MainActor
+    func saveQrCodeData() {
+        if let result = qrCodeResult {
+            dbService?.creatQrCodeData(with: result, timestamp: Date())
         }
     }
     

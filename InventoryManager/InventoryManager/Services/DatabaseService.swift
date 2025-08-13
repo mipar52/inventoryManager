@@ -173,6 +173,16 @@ final class DatabaseService: ObservableObject {
             }
         }
     }
+    
+    func creatQrCodeData(with data: String, timestamp: Date) {
+        performBackground { context in
+            do {
+                let _ = try QRCodeData.getOrCreateData(with: timestamp, qrCodeData: data, context)
+            } catch {
+                debugPrint("[DBService] - error creating data: \(error.localizedDescription)")
+            }
+        }
+    }
 }
 
 extension Spreadsheet {
@@ -210,6 +220,23 @@ extension Sheet {
         newObject.name = name
         newObject.sheetId = sheetId
         newObject.spreadsheet = spreadsheet
+        return newObject
+    }
+}
+
+extension QRCodeData {
+    static func fetchQrCodeData(timestamp: Date) -> NSFetchRequest<QRCodeData> {
+        let request: NSFetchRequest<QRCodeData> = QRCodeData.fetchRequest()
+        request.predicate = NSPredicate(format: "timestamp == %@", timestamp as CVarArg)
+        request.fetchLimit = 1
+        return request
+    }
+    
+    static func getOrCreateData(with timestamp: Date, qrCodeData: String, _ context: NSManagedObjectContext) throws -> QRCodeData {
+        if let exisitingData = try context.fetch(fetchQrCodeData(timestamp: timestamp)).first { return exisitingData}
+        let newObject = QRCodeData(context: context)
+        newObject.timestamp = timestamp
+        newObject.stringData = qrCodeData
         return newObject
     }
 }

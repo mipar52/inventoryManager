@@ -9,6 +9,7 @@ import SwiftUI
 
 struct QRCodeResultScreen: View {
     @Environment(\.dismiss) var dismiss
+    @EnvironmentObject private var db: DatabaseService
     
     @ObservedObject var viewModel: ScannerViewModel
     @State var showErrorToast: Bool = false
@@ -39,6 +40,7 @@ struct QRCodeResultScreen: View {
                 Task {
                     do {
                         try await viewModel.appendToSpreadsheet()
+                        viewModel.saveQrCodeData()
                         dismiss()
                     } catch {
                         errorMessage = error.localizedDescription
@@ -53,7 +55,7 @@ struct QRCodeResultScreen: View {
         .onAppear(perform: {
             Task {
                 do {
-                    try await viewModel.configureGoogleService()
+                    try await viewModel.configureGoogleService(db)
                 } catch {
                     errorMessage = error.localizedDescription
                     showErrorToast.toggle()

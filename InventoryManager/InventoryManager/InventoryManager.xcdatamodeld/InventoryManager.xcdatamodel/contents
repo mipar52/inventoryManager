@@ -5,6 +5,7 @@
     </entity>
     <entity name="QRCodeData" representedClassName="QRCodeData" syncable="YES" codeGenerationType="class">
         <attribute name="stringData" optional="YES" attributeType="String"/>
+        <attribute name="timestamp" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
     </entity>
     <entity name="Sheet" representedClassName="Sheet" syncable="YES" codeGenerationType="class">
         <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
