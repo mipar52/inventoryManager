@@ -59,6 +59,25 @@ final class DatabaseService: ObservableObject {
         }
     }
     
+    func createSpreadsheetsWithSheets(_ spreadsheets: [GoogleSpreadsheet]) async throws {
+        return try await withCheckedThrowingContinuation { continuation in
+            performBackground { context in
+                do {
+                    for spreadsheet in spreadsheets {
+                        let createdSpreadsheet = try Spreadsheet.getOrCreate(with: spreadsheet.id, name: spreadsheet.name, context)
+                        
+                        for sheet in spreadsheet.sheets {
+                            let _ = try Sheet.getOrCreate(with: sheet.id, name: sheet.name, spreadsheet: createdSpreadsheet, context)
+                            }
+                    }
+                    continuation.resume()
+                } catch {
+                    continuation.resume(throwing: error)
+                }
+            }
+        }
+    }
+    
     // Spreadsheet CRUD
     func createSpreadsheet(spreadsheetId: String, spreadsheetName: String) async throws -> NSManagedObjectID {
         return try await withCheckedThrowingContinuation { continuation in
@@ -93,6 +112,29 @@ final class DatabaseService: ObservableObject {
         }
     }
     
+    func deleteAllSpreadsheets() throws {
+        performBackground { context in
+            let request: NSFetchRequest<NSFetchRequestResult> = Spreadsheet.fetchRequest()
+            let spreadsheetBatchDelete = NSBatchDeleteRequest(fetchRequest: request)
+            spreadsheetBatchDelete.resultType = .resultTypeObjectIDs
+            
+            do {
+                if let result = try context.execute(spreadsheetBatchDelete) as? NSBatchDeleteResult,
+                   let objectIds = result.result as? [NSManagedObjectID] {
+                    let changes: [AnyHashable: Any] = [NSDeletedObjectsKey: objectIds]
+                    
+                    NSManagedObjectContext.mergeChanges(
+                        fromRemoteContextSave: changes,
+                        into: [self.container.viewContext]
+                    )
+                }
+            } catch {
+                debugPrint("[DBService] - failed to delete all spreadsheets - \(error.localizedDescription)")
+            }
+        }
+    }
+
+    
     // Sheet CRUD
     func createSheet(sheetId: String, sheetName: String, spreadsheet: NSManagedObjectID) async throws {
         return try await withCheckedThrowingContinuation { continutation in
@@ -101,7 +143,8 @@ final class DatabaseService: ObservableObject {
                     guard let spreadsheet = try context.existingObject(with: spreadsheet) as? Spreadsheet else {
                         throw GoogleAuthError.ServiceUnavailable
                     }
-                    try Sheet.getOrCreate(with: sheetId, name: sheetName, spreadsheet: spreadsheet, context)
+                    let _ = try Sheet.getOrCreate(with: sheetId, name: sheetName, spreadsheet: spreadsheet, context)
+                    
                     continutation.resume()
                 } catch {
                     continutation.resume(throwing: error)
@@ -153,19 +196,20 @@ extension Spreadsheet {
 
 extension Sheet {
     
-    static func fetchSheet(id sheetId: String) -> NSFetchRequest<Sheet> {
+    static func fetchSheet(id sheetId: String, spreadsheetId: String) -> NSFetchRequest<Sheet> {
         let request: NSFetchRequest<Sheet> = Sheet.fetchRequest()
-        request.predicate = NSPredicate(format: "sheetId == %@", sheetId)
+        request.predicate = NSPredicate(format: "sheetId == %@ AND spreadsheet.spreadsheetId == %@", sheetId, spreadsheetId)
         request.fetchLimit = 1
         return request
     }
     
-    static func getOrCreate(with sheetId: String, name: String, spreadsheet: Spreadsheet, _ context: NSManagedObjectContext) throws {
-        if let exisitingSheet = try context.fetch(fetchSheet(id: sheetId)).first { return }
+    static func getOrCreate(with sheetId: String, name: String, spreadsheet: Spreadsheet, _ context: NSManagedObjectContext) throws -> Sheet {
+        if let exisitingSheet = try context.fetch(fetchSheet(id: sheetId, spreadsheetId: spreadsheet.spreadsheetId!)).first { return exisitingSheet}
         let newObject = Sheet(context: context)
         newObject.id = UUID()
         newObject.name = name
         newObject.sheetId = sheetId
         newObject.spreadsheet = spreadsheet
+        return newObject
     }
 }

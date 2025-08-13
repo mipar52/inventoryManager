@@ -6,12 +6,6 @@ struct SpreadsheetPicker: View {
         animation: .easeInOut
     )
     private var spreadsheets: FetchedResults<Spreadsheet>
-    
-    @FetchRequest(
-        sortDescriptors: [NSSortDescriptor(key: "name", ascending: true)],
-        animation: .easeInOut
-    )
-    private var sheets: FetchedResults<Sheet>
     @ObservedObject var viewModel: ScannerViewModel
 
     var body: some View {
@@ -75,8 +69,11 @@ private struct SpreadsheetSubmenu: View {
 
     // MARK: helpers
     private func sheetsArray(for spreadsheet: Spreadsheet) -> [Sheet] {
-        let set = (spreadsheet.sheets as? Set<Sheet>) ?? []
-        return set.sorted { ($0.name ?? "") < ($1.name ?? "") }
+        if let sheets = (spreadsheet.sheets as? Set<Sheet>) {
+            return sheets.sorted { ($0.name ?? "") < ($1.name ?? "") }
+        }
+        print(spreadsheet.name)
+        return []
     }
 
     private func isSelected(sheet: Sheet, in spreadsheet: Spreadsheet) -> Bool {

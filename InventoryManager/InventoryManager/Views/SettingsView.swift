@@ -38,6 +38,18 @@ struct SettingsView: View {
             } label: {
                 Text("Sync Google Spreadsheets")
             }
+            
+            Button {
+                Task {
+                    do {
+                        try  viewModel.deleteSpreadsheets()
+                    } catch {
+                        debugPrint("Error: \(error.localizedDescription)")
+                    }
+                }
+            } label: {
+                Text("Delete all Google Spreadsheets")
+            }
         }
         .onAppear {
             Task {

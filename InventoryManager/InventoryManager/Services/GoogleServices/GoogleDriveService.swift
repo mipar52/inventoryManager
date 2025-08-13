@@ -42,21 +42,21 @@ final class GoogleDriveService {
                         continuation.resume(throwing: GoogleAuthError.ServiceUnavailable)
                         return
                     }
-                    
+                    continuation.resume()
+
                     Task {
+                        var googleSpreadsheets = [GoogleSpreadsheet]()
                         for item in listFiles {
                             if let name = item.name,
                                let id = item.identifier,
                                let sheets = try await self?.spreadsheetService.getSheetsFromSpreadsheet(from: id) {
-                                if let spreadsheet = try await self?.db.createSpreadsheet(spreadsheetId: id, spreadsheetName: name) {
-                                    for sheet in sheets {
-                                        try await self?.db.createSheet(sheetId: sheet.id, sheetName: sheet.name, spreadsheet: spreadsheet)
-                                    }
-                                }
+                                print(id, name, sheets.count)
+                                googleSpreadsheets.append(GoogleSpreadsheet(id: id, name: name, sheets: sheets))
                             }
                         }
+                        
+                        try await self?.db.createSpreadsheetsWithSheets(googleSpreadsheets)
                     }
-                    continuation.resume()
                 } else {
                     if let error = error {
                         continuation.resume(throwing: error)

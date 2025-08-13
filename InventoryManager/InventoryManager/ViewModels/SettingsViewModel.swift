@@ -17,8 +17,10 @@ class SettingsViewModel: ObservableObject {
     @Published var userImage: UIImage? = nil
     
     private var googleDriveService: GoogleDriveService?
+    private var dbService: DatabaseService?
     
     func configureViewModel(with db: DatabaseService) async throws {
+        dbService = db
         googleDriveService = GoogleDriveService(db: db)
         try await googleDriveService?.configure()
     }
@@ -60,5 +62,9 @@ class SettingsViewModel: ObservableObject {
     
     func syncGoogleSpreadsheets() async throws {
         try await googleDriveService?.retriveSpreadsheetsFromDrive()
+    }
+    
+    func deleteSpreadsheets() throws {
+        try dbService?.deleteAllSpreadsheets()
     }
 }
