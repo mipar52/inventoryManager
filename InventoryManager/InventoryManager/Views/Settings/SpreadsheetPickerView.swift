@@ -24,6 +24,7 @@ struct SpreadsheetPickerView: View {
                         .foregroundStyle(viewModel.selectedSpreadsheet == spreadsheet ? Color.purpleColor : .primary)
                 }
         }
+        .navigationTitle(Text("Spreadsheet picker").font(.largeTitle))
         .onAppear {
             viewModel.loadSelection()
         }

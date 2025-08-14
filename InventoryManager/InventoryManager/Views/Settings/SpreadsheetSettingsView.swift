@@ -21,10 +21,6 @@ struct SpreadsheetSettingsView: View {
         } label: {
             Text("Pick a Spreadsheet")
         }
-
-        
-        Text("Content View")
-
     }
 }
 

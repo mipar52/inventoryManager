@@ -17,8 +17,9 @@ struct SheetPickerView: View {
             if let sheets = spreadsheet.sheets?.allObjects as? [Sheet] {
                 List(sheets, id: \.objectID) { sheet in
                     Button {
-                        if let spreadsheetId = spreadsheet.spreadsheetId,
-                           let sheetId = sheet.sheetId {
+                        guard let spreadsheetId = spreadsheet.spreadsheetId,
+                           let sheetId = sheet.sheetId else { return }
+                        withAnimation (.spring(response: 0.35, dampingFraction: 0.8)){
                             viewModel.setSelection(with: spreadsheetId, sheet: sheetId)
                         }
                     } label: {
@@ -30,13 +31,21 @@ struct SheetPickerView: View {
                             if (viewModel.selectedSheet == sheet) {
                                 Spacer()
                                 Image(systemName: "checkmark.circle.fill")
+                                    .symbolEffect(.bounce.wholeSymbol, value: isSheetSelected)
+                                    .font(.largeTitle)
+                                    .foregroundStyle(Color.purpleColor)
                             }
                         }
+                        .onChange(of: viewModel.selectedSheet?.objectID, { oldValue, newValue in
+                            if newValue == sheet.objectID {
+                                isSheetSelected.toggle()
+                            }
+                        })
                     }
                 }
             }
         }
-        .navigationTitle(Text(spreadsheet.name ?? "Untitled Spreadsheet"))
+        .navigationTitle(Text(spreadsheet.name ?? "Untitled Spreadsheet").font(.largeTitle))
     }
 }
 
