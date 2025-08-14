@@ -28,7 +28,7 @@ final class GoogleDriveService {
         }
     }
     
-    func retriveSpreadsheetsFromDrive() async throws {
+    func retriveSpreadsheetsFromDrive(progress: @MainActor @escaping (String) -> Void) async throws {
         guard let driveService = self.driveService else { throw GoogleAuthError.ServiceUnavailable }
         
         let query = GTLRDriveQuery_FilesList.query()
@@ -42,7 +42,6 @@ final class GoogleDriveService {
                         continuation.resume(throwing: GoogleAuthError.ServiceUnavailable)
                         return
                     }
-                    continuation.resume()
 
                     Task {
                         var googleSpreadsheets = [GoogleSpreadsheet]()
@@ -50,12 +49,13 @@ final class GoogleDriveService {
                             if let name = item.name,
                                let id = item.identifier,
                                let sheets = try await self?.spreadsheetService.getSheetsFromSpreadsheet(from: id) {
-                                print(id, name, sheets.count)
+                                await progress(name)
                                 googleSpreadsheets.append(GoogleSpreadsheet(id: id, name: name, sheets: sheets))
                             }
                         }
-                        
+                        continuation.resume()
                         try await self?.db.createSpreadsheetsWithSheets(googleSpreadsheets)
+                        
                     }
                 } else {
                     if let error = error {

@@ -8,11 +8,23 @@
 import SwiftUI
 
 struct QrCodeDetailsView: View {
+    @ObservedObject var viewModel: ScannerViewModel
+    
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        VStack(spacing: 15) {
+            Text("Scan details")
+                .font(.largeTitle)
+                .fontWeight(.bold)
+            
+            List {
+//                ForEach(viewModel.qrCodeResult?.components(separatedBy: .newlines)) { data in
+//                    QRCodeResultField(labelText: "Item", detailsText: <#T##String#>)
+//                }
+            }
+        }
     }
 }
 
 #Preview {
-    QrCodeDetailsView()
+    QrCodeDetailsView(viewModel: ScannerViewModel())
 }

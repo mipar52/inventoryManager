@@ -1,0 +1,12 @@
+- Create QR detailes view
+    - Should display data
+    - Create new VM?
+    - Send data to sheet
+    - Delete data
+
+- Create Scanning Settings Screen
+    - Create VM for it
+
+- Create QR code Settings Screen
+    - Create VM for it
+    

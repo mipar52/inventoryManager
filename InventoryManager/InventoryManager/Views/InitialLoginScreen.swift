@@ -72,7 +72,7 @@ struct InitialLoginScreen: View {
                     }
                     Spacer().frame(height: 40)
                 }
-                .withLoadingOverlay($isLoading)
+                .loadingOverlay($isLoading, text: "Getting Google services...", symbols: ["cloud.fill", "cloud"])
                 .navigationDestination(isPresented: $viewModel.shouldNavigateToMainView) {
                     MainView()
                 }

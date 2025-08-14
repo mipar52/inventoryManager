@@ -15,7 +15,12 @@ struct SpreadsheetPickerView: View {
     @StateObject var viewModel: SpreadsheetPickerViewModel
     
     var body: some View {
-        List(spreadsheets, id: \.objectID) { spreadsheet in
+        VStack(spacing: 15) {
+            Text("Spreadsheet picker")
+                .font(.largeTitle)
+                .fontWeight(.bold)
+            
+            List(spreadsheets, id: \.objectID) { spreadsheet in
                 NavigationLink {
                     SheetPickerView(viewModel: viewModel, spreadsheet: spreadsheet)
                 } label: {
@@ -23,10 +28,12 @@ struct SpreadsheetPickerView: View {
                         .fontWeight(viewModel.selectedSpreadsheet == spreadsheet ? .bold : .medium)
                         .foregroundStyle(viewModel.selectedSpreadsheet == spreadsheet ? Color.purpleColor : .primary)
                 }
-        }
-        .navigationTitle(Text("Spreadsheet picker").font(.largeTitle))
-        .onAppear {
-            viewModel.loadSelection()
+            }
+            
+            //        .navigationTitle(Text("Spreadsheet picker").font(.largeTitle))
+            .onAppear {
+                viewModel.loadSelection()
+            }
         }
     }
 }

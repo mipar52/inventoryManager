@@ -16,6 +16,12 @@ class SettingsViewModel: ObservableObject {
     @Published var username: String = ""
     @Published var userImage: UIImage? = nil
     
+    @Published var isLoading: Bool = false
+    @Published var currentSheet: String = ""
+    
+    @Published var showErrorAlert: Bool = false
+    @Published var settingsError: Error?
+    
     private var googleDriveService: GoogleDriveService?
     private var dbService: DatabaseService?
     
@@ -23,6 +29,21 @@ class SettingsViewModel: ObservableObject {
         dbService = db
         googleDriveService = GoogleDriveService(db: db)
         try await googleDriveService?.configure()
+    }
+    
+    func performTaskWithLoading(loadingMessage: String = "Initilizing the process..\nHang tight!", _ asyncWork: () async throws -> Void) async {
+        currentSheet = loadingMessage
+        isLoading = true
+        defer { isLoading = false; currentSheet = "Loading…" }
+
+        do {
+            try await asyncWork()
+        } catch {
+            showErrorAlert.toggle()
+            settingsError = error
+            debugPrint(error.localizedDescription)
+        }
+        
     }
     
     func syncFromGoogleAuthManager () async {
@@ -42,9 +63,11 @@ class SettingsViewModel: ObservableObject {
             }
         } catch {
             debugPrint("[GoogleAuthManager] - Error: \(error)")
-            self.username = "Not signed in"
+            self.username = "Not signed in.\nTap to sign in"
             self.userImage = nil
             self.isSignedIn = false
+            showErrorAlert.toggle()
+            settingsError = error
         }
     }
     
@@ -61,7 +84,9 @@ class SettingsViewModel: ObservableObject {
     }
     
     func syncGoogleSpreadsheets() async throws {
-        try await googleDriveService?.retriveSpreadsheetsFromDrive()
+        try await googleDriveService?.retriveSpreadsheetsFromDrive { [weak self] progressSheet in
+                self?.currentSheet = "Almost there!\nCurrently checking Spreadsheet:\n\(progressSheet)"
+        }
     }
     
     func deleteSpreadsheets() throws {

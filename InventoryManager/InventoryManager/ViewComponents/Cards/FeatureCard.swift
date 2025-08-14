@@ -24,7 +24,6 @@ struct FeatureCard: View {
                 .background(
                     Circle().fill(.ultraThinMaterial)
                 )
-                // idle micro-motion & tap bounce
                 .symbolEffect(.pulse.byLayer, options: .repeat(.periodic(Int(1.8))))
                 .symbolEffect(.bounce, value: isPressed)
 

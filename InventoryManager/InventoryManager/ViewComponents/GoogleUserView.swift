@@ -19,7 +19,7 @@ struct GoogleUserView: View {
                     Image(uiImage: userImage ?? UIImage(systemName: "person.circle")!)
                         .resizable()
                         .scaledToFill()
-                        .frame(width: 40, height: 40)
+                        .frame(width: 40, height: 40, alignment: .leading)
                         .clipShape(Circle())
                         .overlay(Circle().stroke(Color.gray.opacity(0.3), lineWidth: 1))
 
@@ -39,12 +39,14 @@ struct GoogleUserView: View {
                 }
             }
         }
-        .padding(12)
-        .background(
-            RoundedRectangle(cornerRadius: 12)
-                .fill(Color.white)
-                .shadow(color: Color.black.opacity(0.05), radius: 4, x: 0, y: 2)
+        .padding()
+        .background(.thinMaterial, in: RoundedRectangle(cornerRadius: 16))
+        .overlay(
+            RoundedRectangle(cornerRadius: 16)
+                .strokeBorder(.white.opacity(0.15))
         )
+        .shadow(radius: 2, y: 1)
+        .contentShape(Rectangle())
     }
 }
 
@@ -54,8 +56,8 @@ struct GoogleUserView: View {
             .ignoresSafeArea()
         
         GoogleUserView(
-            userImage: UIImage(systemName: "person.circle")!,
-            userName: "Google User", isSignedIn: false)
+            userImage: nil,
+            userName: "Google User", isSignedIn: true)
         .padding()
     }
 }

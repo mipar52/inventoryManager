@@ -9,29 +9,49 @@ import Foundation
 import SwiftUI
 
 struct LoadingOverlayModifier: ViewModifier {
-    @Binding var isLoading: Bool
+    @Binding var isPresented: Bool
+    let text: String
+    let symbols: [String]
+    var dimOpacity: Double = 0.25
 
     func body(content: Content) -> some View {
         ZStack {
             content
-                .disabled(isLoading)
-                .blur(radius: isLoading ? 1 : 0)
+                .disabled(isPresented)
+                .overlay {
+                    if isPresented {
+                        Rectangle()
+                            .fill(.black.opacity(dimOpacity))
+                            .ignoresSafeArea()
+                            .transition(.opacity)
+                            .accessibilityHidden(true)
 
-            if isLoading {
-                Color.black.opacity(0.3)
-                    .ignoresSafeArea()
-
-                ProgressView()
-                    .progressViewStyle(CircularProgressViewStyle(tint: .white))
-                    .scaleEffect(1.5)
-            }
+                        SpreadsheetLoadingView(text: text, symbols: symbols)
+                            .transition(.scale.combined(with: .opacity))
+                            .accessibilityElement(children: .combine)
+                            .accessibilityAddTraits(.isModal)
+                    }
+                }
+                .animation(.easeInOut(duration: 0.2), value: isPresented)
         }
-        .animation(.easeInOut, value: isLoading)
     }
 }
 
 extension View {
-    func withLoadingOverlay(_ isLoading: Binding<Bool>) -> some View {
-        self.modifier(LoadingOverlayModifier(isLoading: isLoading))
+    func loadingOverlay(
+        _ isPresented: Binding<Bool>,
+        text: String,
+        symbols: [String],
+        dimOpacity: Double = 0.25
+    ) -> some View {
+        modifier(
+            LoadingOverlayModifier(
+                isPresented: isPresented,
+                text: text,
+                symbols: symbols,
+                dimOpacity: dimOpacity
+            )
+        )
     }
 }
+

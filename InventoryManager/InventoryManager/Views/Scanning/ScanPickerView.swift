@@ -17,7 +17,6 @@ struct ScanPickerView: View {
     var body: some View {
         NavigationStack {
             ZStack {
-                // Background
                 LinearGradient(colors: [Color.purple.opacity(0.25), Color.blue.opacity(0.25)],
                                startPoint: .topLeading, endPoint: .bottomTrailing)
                     .ignoresSafeArea()
@@ -52,7 +51,6 @@ struct ScanPickerView: View {
                     .buttonStyle(.plain)
                     .accessibilityLabel("Choose spreadsheet and sheet")
 
-                    // Cards
                     VStack(spacing: 14) {
                         NavigationLink {
                             QRScanStreamView(

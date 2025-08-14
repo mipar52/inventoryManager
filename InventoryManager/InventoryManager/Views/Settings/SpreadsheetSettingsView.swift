@@ -9,21 +9,43 @@ import SwiftUI
 
 struct SpreadsheetSettingsView: View {
     @EnvironmentObject private var selectionService: SelectionService
+
+    @StateObject var settingsVm: SettingsViewModel
+    @State private var isLoadingPresented = false
+    
     var body: some View {
-        Button {
+        VStack(spacing: 15) {
+            Text("Spreadsheet settings")
+                .font(.largeTitle)
+            Button {
+                Task {
+                    await settingsVm.performTaskWithLoading {
+                        try await settingsVm.syncGoogleSpreadsheets()
+                    }
+                }
+                
+            } label: {
+                SpreadsheetSyncCard()
+            }
+            .padding()
             
-        } label: {
-            Text("Get Spreadsheets from Google Drive")
+            NavigationLink {
+                SpreadsheetPickerView(viewModel: SpreadsheetPickerViewModel(selectionService: selectionService))
+            } label: {
+                FeatureCard(title: "Pick a Spreadsheet", subtitle: "Choose a Spreadsheet & Sheet to send the scanned information", systemImage: "document.on.document.fill", isPressed: true)
+            }
+            .padding()
+            Spacer()
         }
-        
-        NavigationLink {
-            SpreadsheetPickerView(viewModel: SpreadsheetPickerViewModel(selectionService: selectionService))
-        } label: {
-            Text("Pick a Spreadsheet")
-        }
+        .loadingOverlay(
+            $settingsVm.isLoading,
+            text: settingsVm.currentSheet,
+            symbols: ["document.on.document.fill", "document.viewfinder.fill", "document.badge.arrow.up.fill"])
+        .navigationBarBackButtonHidden(isLoadingPresented)
+        .errorAlert(error: $settingsVm.settingsError)
     }
 }
 
 #Preview {
-    SpreadsheetSettingsView()
+    SpreadsheetSettingsView(settingsVm: SettingsViewModel())
 }

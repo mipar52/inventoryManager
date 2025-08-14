@@ -1,70 +1,69 @@
-//
-//  QRScanStreamView.swift
-//  InventoryManager
-//
-//  Created by Milan Parađina on 02.08.2025..
-//
-
 import SwiftUI
 
 struct QRScanStreamView: View {
-    @StateObject var scannerViewModel: ScannerViewModel
-    @StateObject var spreadsheetPickerViewModel: SpreadsheetPickerViewModel
-    @State var showFlashToast = false
-    @State var showQrResultScreen = false
+    @ObservedObject var scannerViewModel: ScannerViewModel
+    @ObservedObject var spreadsheetPickerViewModel: SpreadsheetPickerViewModel
+
+    @State private var showFlashToast = false
+    @State private var showReticleTips = true
     
     var body: some View {
         ZStack {
             ScannerView(scannerViewModel: scannerViewModel)
+                .ignoresSafeArea()
+            
+            QRRecticleOverlay()
 
             VStack {
-                HStack {
+                HStack(spacing: 12) {
                     SpreadsheetPicker(viewModel: spreadsheetPickerViewModel)
+                        .accessibilityLabel("Destination spreadsheet and sheet")
+
                     Spacer()
+
                     Button {
                         scannerViewModel.toggleFlashlight()
                         if scannerViewModel.flashlightPressed {
-                            showFlashToast.toggle()
+                            showFlashToast = true
                         }
                     } label: {
-                        
-                        Image(systemName: scannerViewModel.flashlightPressed ? "flashlight.off.circle.fill" : "flashlight.slash.circle")
-                            .font(.largeTitle)
-                            .padding()
-                            .background(.ultraThinMaterial)
-                            .clipShape(Circle())
+                        Image(systemName: scannerViewModel.flashlightPressed
+                              ? "flashlight.on.fill" : "flashlight.off.fill")
+                            .font(.system(size: 22, weight: .semibold))
+                            .padding(12)
+                            .background(.ultraThinMaterial, in: Circle())
                     }
-
-                    .padding()
-                    .padding(.top, 30)
+                    .accessibilityLabel(scannerViewModel.flashlightPressed ? "Turn flashlight off" : "Turn flashlight on")
+                    .padding(.trailing, 8)
                 }
+                .padding(.horizontal)
+                .padding(.top, 14)
 
                 Spacer()
+
                 if showFlashToast {
                     ToastView(labelText: "Watch out for glare!")
-                        .onAppear {
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-                                showFlashToast.toggle()
-                            }
+                        .transition(.move(edge: .bottom).combined(with: .opacity))
+                        .padding(.bottom, 24)
+                        .task {
+                            try? await Task.sleep(nanoseconds: 2_000_000_000)
+                            withAnimation(.easeOut) { showFlashToast = false }
                         }
-                        .transition(.move(edge: .top).combined(with: .opacity))
-                        .animation(.easeOut(duration: 0.3), value: showFlashToast)
-                        
                 }
-//                if let code = scannerViewModel.qrCodeResult {
-//                    ToastView(labelText: code)
-//                        .hoverEffect()
-//                }
             }
         }
-      //  .ignoresSafeArea()
+        .navigationTitle("Live Scan")
+        .navigationBarTitleDisplayMode(.inline)
         .onAppear {
             scannerViewModel.startScanningSession()
         }
-        .onDisappear { scannerViewModel.stopScanningSession() }
+        .onDisappear {
+            scannerViewModel.stopScanningSession()
+        }
         .sheet(isPresented: $scannerViewModel.showQrCodeResult, onDismiss: {
             scannerViewModel.qrCodeResult = nil
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+            Task { @MainActor in
+                try? await Task.sleep(nanoseconds: 800_000_000)
                 scannerViewModel.startScanningSession()
             }
         }) {
@@ -73,10 +72,5 @@ struct QRScanStreamView: View {
                 .presentationDragIndicator(.visible)
                 .padding()
         }
-        }
     }
-
-
-#Preview {
-   // QRScanStreamView(scannerViewModel: ScannerViewModel())
 }
