@@ -8,12 +8,12 @@
 import SwiftUI
 
 struct MainView: View {
-    
+    @EnvironmentObject var selectionService: SelectionService
     var body: some View {
         TabView {
             
             Tab {
-                ScanPickerView()
+                ScanPickerView(selectionService: selectionService)
             } label: {
                 TabLabelView(uiImageString: "barcode.viewfinder", labelString: "Scan")
             }
