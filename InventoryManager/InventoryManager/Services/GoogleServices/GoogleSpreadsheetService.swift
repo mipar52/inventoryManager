@@ -20,9 +20,12 @@ actor GoogleSpreadsheetService {
     
     func appendDataToSheet(qrCodeData: String) async throws {
         guard let sheetsService = sheetsService else { throw GoogleAuthError.NotSignedIn}
+        guard let spreadsheetId = UserDefaults.standard.string(forKey: UserDefaultsConstants.selectedSpreadsheetId),
+        let sheetId = UserDefaults.standard.string(forKey: UserDefaultsConstants.selectedSheetId) else
+        { throw GoogleAuthError.ServiceUnavailable }
         
-        let spreadsheetId = UserDefaultsConstants.sheetID
-        let range = "A1:Q"
+        
+        let range = "\(sheetId)!A1:Q"
         let rangeToAppend = GTLRSheets_ValueRange.init();
         
         rangeToAppend.values = [qrCodeData.components(separatedBy: " ")]

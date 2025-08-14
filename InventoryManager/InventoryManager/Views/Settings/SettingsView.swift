@@ -27,6 +27,13 @@ struct SettingsView: View {
                         }
                     }
                 }
+            
+            NavigationLink {
+                SpreadsheetSettingsView()
+            } label: {
+                Text("Spreadsheets")
+            }
+
             Button {
                 Task {
                     do {

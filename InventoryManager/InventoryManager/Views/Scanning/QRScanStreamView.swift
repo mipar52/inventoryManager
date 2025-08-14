@@ -9,17 +9,17 @@ import SwiftUI
 
 struct QRScanStreamView: View {
     @StateObject var scannerViewModel: ScannerViewModel
+    @StateObject var spreadsheetPickerViewModel: SpreadsheetPickerViewModel
     @State var showFlashToast = false
     @State var showQrResultScreen = false
-    @EnvironmentObject private var db: DatabaseService
-
+    
     var body: some View {
         ZStack {
             ScannerView(scannerViewModel: scannerViewModel)
 
             VStack {
                 HStack {
-                    SpreadsheetPicker(viewModel: scannerViewModel)
+                    SpreadsheetPicker(viewModel: spreadsheetPickerViewModel)
                     Spacer()
                     Button {
                         scannerViewModel.toggleFlashlight()

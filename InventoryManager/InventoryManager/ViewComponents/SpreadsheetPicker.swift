@@ -6,7 +6,7 @@ struct SpreadsheetPicker: View {
         animation: .easeInOut
     )
     private var spreadsheets: FetchedResults<Spreadsheet>
-    @ObservedObject var viewModel: ScannerViewModel
+    @ObservedObject var viewModel: SpreadsheetPickerViewModel
 
     var body: some View {
         Menu {
@@ -16,14 +16,16 @@ struct SpreadsheetPicker: View {
                     selectedSpreadsheet: viewModel.selectedSpreadsheet,
                     selectedSheet: viewModel.selectedSheet,
                     onSelect: { sp, sh in
-                        viewModel.selectedSpreadsheet = sp
-                        viewModel.selectedSheet = sh
+                        if let spreadsheetId = sp.spreadsheetId,
+                           let sheet = sh.sheetId {
+                            viewModel.setSelection(with: spreadsheetId, sheet: sheet)
+                        }
                     }
                 )
             }
         } label: {
             HStack(spacing: 8) {
-                Text(viewModel.selectedSpreadsheet?.name ?? "Select Spreadsheet")
+                Text(viewModel.selectionString)
                     .lineLimit(1)
                 Image(systemName: "chevron.down")
             }
@@ -31,6 +33,10 @@ struct SpreadsheetPicker: View {
             .padding(.horizontal, 12)
             .background(.ultraThinMaterial)
             .clipShape(RoundedRectangle(cornerRadius: 12))
+        }
+        .disabled(spreadsheets.isEmpty)
+        .onAppear {
+            viewModel.loadSelection()
         }
     }
 }
@@ -72,7 +78,6 @@ private struct SpreadsheetSubmenu: View {
         if let sheets = (spreadsheet.sheets as? Set<Sheet>) {
             return sheets.sorted { ($0.name ?? "") < ($1.name ?? "") }
         }
-        print(spreadsheet.name)
         return []
     }
 

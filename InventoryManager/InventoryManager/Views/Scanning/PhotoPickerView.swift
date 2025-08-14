@@ -10,14 +10,14 @@ import PhotosUI
 
 struct PhotoPickerView: View {
     @ObservedObject var scannerViewModel: ScannerViewModel
-    
+    @ObservedObject var spreadsheetViewModel: SpreadsheetPickerViewModel
     @State private var item: PhotosPickerItem?
     @State private var uiImage: UIImage?
     @State private var showToastError: Bool = false
     
     var body: some View {
         VStack {
-            SpreadsheetPicker(viewModel: scannerViewModel)
+            SpreadsheetPicker(viewModel: spreadsheetViewModel)
             PhotosPicker("Pick a photo", selection: $item, matching: .images)
             if let image = uiImage {
                 VStack {
