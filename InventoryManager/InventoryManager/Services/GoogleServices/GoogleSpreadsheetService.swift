@@ -46,6 +46,34 @@ actor GoogleSpreadsheetService {
             }
         }
     
+    func sendBatchUpdateToSheet(items: [QRCodeData]) async throws {
+        guard let sheetsService = sheetsService else { throw GoogleAuthError.NotSignedIn}
+        guard let spreadsheetId = UserDefaults.standard.string(forKey: UserDefaultsConstants.selectedSpreadsheetId),
+        let sheetId = UserDefaults.standard.string(forKey: UserDefaultsConstants.selectedSheetId) else
+        { throw GoogleAuthError.ServiceUnavailable }
+        
+        
+        let range = "\(sheetId)!A1:Q"
+        let rangeToAppend = GTLRSheets_ValueRange.init();
+        let request = GTLRSheets_BatchUpdateSpreadsheetRequest()
+        let itemArray = items.map { $0.stringData?.components(separatedBy: "\n") }
+        request.responseRanges = ["bla", "test"]
+        //rangeToAppend.values = [itemscomponents(separatedBy: " ")]
+        let query = GTLRSheetsQuery_SpreadsheetsBatchUpdate.query(withObject: request, spreadsheetId: spreadsheetId)
+        
+        return try await withCheckedThrowingContinuation { continuation in
+            sheetsService.executeQuery(query) { (ticket, result, error) in
+                    if let error = error {
+                        debugPrint("[GoogleSpreadsheetService] - Error in appending data: \(error)")
+                        continuation.resume(throwing: error)
+                    } else {
+                        debugPrint("[GoogleSpreadsheetService] - data sent: \(items.count) to SheetID: \(spreadsheetId)")
+                        continuation.resume()
+                    }
+                }
+            }
+    }
+    
     func getSheetsFromSpreadsheet(from spreadsheetId: String) async throws -> [GoogleSheet] {
         guard let sheetsService = sheetsService else {
             throw GoogleAuthError.NotSignedIn

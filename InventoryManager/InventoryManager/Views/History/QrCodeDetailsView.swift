@@ -8,7 +8,9 @@
 import SwiftUI
 
 struct QrCodeDetailsView: View {
-    @ObservedObject var viewModel: ScannerViewModel
+   
+    @StateObject var vm: ScanDetailsViewModel
+    let qrCodeData: QRCodeData
     
     var body: some View {
         VStack(spacing: 15) {
@@ -26,5 +28,5 @@ struct QrCodeDetailsView: View {
 }
 
 #Preview {
-    QrCodeDetailsView(viewModel: ScannerViewModel())
+  //  QrCodeDetailsView(viewModel: ScannerViewModel())
 }

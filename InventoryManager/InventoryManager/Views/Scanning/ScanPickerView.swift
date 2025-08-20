@@ -15,7 +15,7 @@ struct ScanPickerView: View {
     }
 
     var body: some View {
-        NavigationStack {
+     //   NavigationStack {
             ZStack {
                 LinearGradient(colors: [Color.purple.opacity(0.25), Color.blue.opacity(0.25)],
                                startPoint: .topLeading, endPoint: .bottomTrailing)
@@ -105,7 +105,7 @@ struct ScanPickerView: View {
                     .presentationDetents([.medium, .large])
             }
             .task { spreadsheetVM.loadSelection() } // initial load
-        }
+       // }
     }
 
     private var currentTargetText: String {

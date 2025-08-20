@@ -183,6 +183,40 @@ final class DatabaseService: ObservableObject {
             }
         }
     }
+    
+    func deleteQrCodeData(timestamp: Date) throws {
+        performBackground { context in
+            do {
+                if let qrCode = try context.fetch(QRCodeData.fetchQrCodeData(timestamp: timestamp)).first {
+                    context.delete(qrCode)
+                }
+            } catch {
+                debugPrint("[DBService] - error deleting qr code data: \(error.localizedDescription)")
+            }
+        }
+    }
+    
+    func deleteAllQrCodeData() throws {
+        performBackground { context in
+            let request: NSFetchRequest<NSFetchRequestResult> = QRCodeData.fetchRequest()
+            let qrCodeDataBatchDelete = NSBatchDeleteRequest(fetchRequest: request)
+            qrCodeDataBatchDelete.resultType = .resultTypeObjectIDs
+            
+            do {
+                if let result = try context.execute(qrCodeDataBatchDelete) as? NSBatchDeleteResult,
+                   let objectIds = result.result as? [NSManagedObjectID] {
+                    let changes: [AnyHashable: Any] = [NSDeletedObjectsKey: objectIds]
+                    
+                    NSManagedObjectContext.mergeChanges(
+                        fromRemoteContextSave: changes,
+                        into: [self.container.viewContext]
+                    )
+                }
+            } catch {
+                debugPrint("[DBService] - failed to delete all data - \(error.localizedDescription)")
+            }
+        }
+    }
 }
 
 extension Spreadsheet {
