@@ -36,51 +36,10 @@ struct ScanHistoryView: View {
                 } else {
                     List {
                         ForEach(sectioned.keys.sorted(by: >), id: \.self) { day in
-                            Section(header:
-                                        Text(dayTitle(for: day))
-                                .font(.subheadline)
-                                .foregroundStyle(.secondary)
-                            ) {
-                                ForEach(sectioned[day] ?? [], id: \.objectID) { scannedItem in
-                                    NavigationLink {
-                                        QrCodeDetailsView(
-                                            vm: ScanDetailsViewModel(sheetService: vm.sheetService, db: vm.db),
-                                            qrCodeData: scannedItem)
-                                    } label: {
-                                        QRRow(item: scannedItem)
-                                    }
-                                    .swipeActions(edge: .trailing, allowsFullSwipe: true, content: {
-                                        
-                                        Button(role: .destructive) {
-                                            do {
-                                                try vm.deleteItem(item: scannedItem)
-                                            } catch {
-                                                debugPrint(error.localizedDescription)
-                                            }
-                                        } label: {
-                                            Label("Delete", systemImage: "trash")
-                                        }
-                                        
-                                        Button {
-                                            UIPasteboard.general.string = scannedItem.stringData
-                                        } label: {
-                                            Label("Copy data", systemImage: "doc.on.doc")
-                                        }
-                                    })
-                                    .contextMenu {
-                                        Button {
-                                            UIPasteboard.general.string = scannedItem.stringData
-                                        } label: {
-                                            Label("Copy", systemImage: "doc.on.doc")
-                                        }
-                                        if let text = scannedItem.stringData {
-                                            ShareLink(item: text) {
-                                                Label("Share", systemImage: "square.and.arrow.up")
-                                            }
-                                        }
-                                    }
-                                }
-                            }
+                            ScanHistorySection(
+                                title: dayTitle(for: day),
+                                scannedItems: Array(scans),
+                                vm: vm)
                         }
                     }
                 }
@@ -88,7 +47,7 @@ struct ScanHistoryView: View {
             .onAppear(perform: {
                 Task {
                     do {
-                        try vm.configure()
+                        try await vm.configure()
                     } catch {
                         debugPrint(error.localizedDescription)
                     }
@@ -104,8 +63,11 @@ struct ScanHistoryView: View {
                                 do {
                                     isSendingAll.toggle()
                                     isLoading.toggle()
-                                    try await vm.sendAllScans(scans)
+                                    try await vm.sendAllScans(items: Array(scans))
+                                    isLoading.toggle()
                                 } catch {
+                                    isLoading.toggle()
+                                    
                                     debugPrint(error.localizedDescription)
                                 }
                             }

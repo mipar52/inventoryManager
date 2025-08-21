@@ -17,7 +17,7 @@ struct SpreadsheetPicker: View {
                     selectedSheet: viewModel.selectedSheet,
                     onSelect: { sp, sh in
                         if let spreadsheetId = sp.spreadsheetId,
-                           let sheet = sh.sheetId {
+                           let sheet = sh.name {
                             viewModel.setSelection(with: spreadsheetId, sheet: sheet)
                         }
                     }

@@ -13,8 +13,33 @@
 		A1146FA72E3D71C700EF433B /* GoogleAPIClientForREST_Sheets in Frameworks */ = {isa = PBXBuildFile; productRef = A1146FA62E3D71C700EF433B /* GoogleAPIClientForREST_Sheets */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		A1B3D8E22E55D5180055E562 /* Embed ExtensionKit Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "$(EXTENSIONS_FOLDER_PATH)";
+			dstSubfolderSpec = 16;
+			files = (
+			);
+			name = "Embed ExtensionKit Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A1B3D9012E55D7140055E562 /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
 		A1146F2C2E3D08B200EF433B /* InventoryManager.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = InventoryManager.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		A1B3D8E82E55D7130055E562 /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
+		A1B3D8EA2E55D7130055E562 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -73,6 +98,8 @@
 		A1146FA32E3D71C100EF433B /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				A1B3D8E82E55D7130055E562 /* WidgetKit.framework */,
+				A1B3D8EA2E55D7130055E562 /* SwiftUI.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -87,6 +114,8 @@
 				A1146F282E3D08B200EF433B /* Sources */,
 				A1146F292E3D08B200EF433B /* Frameworks */,
 				A1146F2A2E3D08B200EF433B /* Resources */,
+				A1B3D8E22E55D5180055E562 /* Embed ExtensionKit Extensions */,
+				A1B3D9012E55D7140055E562 /* Embed Foundation Extensions */,
 			);
 			buildRules = (
 			);

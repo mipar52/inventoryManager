@@ -22,8 +22,13 @@ final class ScanHistoryViewModel: ObservableObject {
     }
     
     func sendAllScans(items: [QRCodeData]) async throws {
-        try await sheetService.sendBatchUpdateToSheet(items: items)
+        for item in items {
+            if let text = item.stringData {
+                try await sheetService.appendDataToSheet(qrCodeData: text)
+            }
+        }
     }
+    
     func deleteItem(item: QRCodeData) throws {
         if let timestamp = item.timestamp {
             try db.deleteQrCodeData(timestamp: timestamp)

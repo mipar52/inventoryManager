@@ -41,7 +41,10 @@ struct SpreadsheetLoadingView: View {
         .background(background, in: RoundedRectangle(cornerRadius: cornerRadius, style: .continuous))
         .shadow(radius: 8, y: 4)
         .onAppear { startCycling() }
-        .onChange(of: symbols) { _ in index = 0 } // reset when symbols change
+        .onChange(of: symbols, { oldValue, newValue in
+            index = 0
+        })
+        //.onChange(of: symbols) { _ in index = 0 } // reset when symbols change
         .accessibilityAddTraits(.isStaticText)
     }
     

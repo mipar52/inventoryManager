@@ -18,7 +18,7 @@ struct SheetPickerView: View {
                 List(sheets, id: \.objectID) { sheet in
                     Button {
                         guard let spreadsheetId = spreadsheet.spreadsheetId,
-                           let sheetId = sheet.sheetId else { return }
+                           let sheetId = sheet.name else { return }
                         withAnimation (.spring(response: 0.35, dampingFraction: 0.8)){
                             viewModel.setSelection(with: spreadsheetId, sheet: sheetId)
                         }
