@@ -17,8 +17,8 @@ struct QRRow: View {
                 .foregroundStyle(.white, .purple)
                 .frame(width: 36, height: 36)
                 .background(Circle().fill(.ultraThinMaterial))
-                .symbolEffect(.bounce.wholeSymbol, value: true)
-                .symbolEffect(.rotate.clockwise, value: true)
+                .symbolEffect(.bounce.wholeSymbol, isActive: true)
+                .symbolEffect(.rotate.clockwise, isActive: true)
             VStack(alignment: .leading, spacing: 4) {
                 Text(item.stringData ?? "—")
                     .font(.system(.body, design: .monospaced))

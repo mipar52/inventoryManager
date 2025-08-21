@@ -95,9 +95,9 @@ struct ScanPickerView: View {
                     PermissionHintView()
                 }
                 .padding(20)
+                .navigationTitle("Pick a scanning method")
+                .navigationBarTitleDisplayMode(.large)
             }
-            .navigationTitle("Scan")
-            .navigationBarTitleDisplayMode(.large)
             .sheet(isPresented: $showTargetPicker) {
                 // Put your nested menu/picker screen here
                 SheetPickerView(viewModel: spreadsheetVM,
