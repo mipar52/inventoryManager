@@ -28,8 +28,8 @@ struct QRRow: View {
                     .foregroundStyle(.secondary)
             }
             Spacer()
-            Image(systemName: "chevron.right")
-                .foregroundStyle(.tertiary)
+//            Image(systemName: "chevron.right")
+//                .foregroundStyle(.tertiary)
         }
         .padding(.vertical, 6)
     }

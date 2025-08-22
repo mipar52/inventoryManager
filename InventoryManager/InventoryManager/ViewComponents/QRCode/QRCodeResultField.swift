@@ -10,17 +10,24 @@ import SwiftUI
 struct QRCodeResultField: View {
     let labelText: String
     let detailsText: String
+    let symbolImage: String
     var body: some View {
-        VStack(alignment: .leading, spacing: 10) {
-            Text(labelText)
-                .font(.headline)
-                .fontWeight(.semibold)
+        HStack {
+            Image(systemName: symbolImage)
+                .font(.title)
+                .padding()
             
-            Text(detailsText)
-                .font(.subheadline)
-                .foregroundStyle(.secondary)
-            
-            Divider()
+            VStack(alignment: .leading, spacing: 10) {
+                Text(labelText)
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
+                
+                Text(detailsText)
+                    .font(.headline)
+                    .fontWeight(.semibold)
+                
+                Divider()
+            }
         }
         .padding()
         .frame(maxWidth: .infinity, alignment: .leading)
@@ -31,5 +38,5 @@ struct QRCodeResultField: View {
 }
 
 #Preview {
-    QRCodeResultField(labelText: "Item 1", detailsText: "Item deets")
+    QRCodeResultField(labelText: "Item 1", detailsText: "Item deets", symbolImage: "qrcode")
 }

@@ -22,9 +22,9 @@ struct QRCodeResultScreen: View {
             
             if let result = viewModel.qrCodeResult {
                 let lines = result.components(separatedBy: .newlines).filter { !$0.isEmpty}
-                List {
+                ScrollView {
                     ForEach(lines, id: \.self) { line in
-                        QRCodeResultField(labelText: "Result", detailsText: line)
+                        QRCodeResultField(labelText: "Result", detailsText: line, symbolImage: "qrcode")
                     }
                 }
             } else {
@@ -36,19 +36,36 @@ struct QRCodeResultScreen: View {
             if showErrorToast {
                 ToastView(labelText: errorMessage)
             }
-            Button {
-                Task {
-                    do {
-                        try await viewModel.appendToSpreadsheet()
-                        viewModel.saveQrCodeData()
-                        dismiss()
-                    } catch {
-                        errorMessage = error.localizedDescription
-                        showErrorToast.toggle()
+            
+            VStack(spacing: 10) {
+                Button {
+                    Task {
+                        do {
+                            try await viewModel.appendToSpreadsheet()
+                            viewModel.saveQrCodeData()
+                            dismiss()
+                        } catch {
+                            errorMessage = error.localizedDescription
+                            showErrorToast.toggle()
+                        }
                     }
+                } label: {
+                    Text("Send to Spreadsheet")
+                        .frame(maxWidth: .infinity, minHeight: 50)
+                        .fontWeight(.bold)
                 }
-            } label: {
-                Text("Send to Spreadsheet")
+                .buttonStyle(.borderedProminent)
+                .tint(.green)
+                
+                Button(role: .cancel) {
+                   dismiss()
+                } label: {
+                    Text("Cancel")
+                        .frame(maxWidth: .infinity, maxHeight: 20)
+                        .fontWeight(.bold)
+                }
+                .buttonStyle(.borderedProminent)
+                .tint(.red)
             }
 
         }

@@ -42,6 +42,7 @@ struct ScanHistoryView: View {
                                 vm: vm)
                         }
                     }
+                    .scrollContentBackground(.hidden)
                 }
             }
             .onAppear(perform: {
