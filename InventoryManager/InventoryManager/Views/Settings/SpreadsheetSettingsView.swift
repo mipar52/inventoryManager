@@ -14,35 +14,40 @@ struct SpreadsheetSettingsView: View {
     @State private var isLoadingPresented = false
     
     var body: some View {
-        VStack(spacing: 15) {
-            Text("Spreadsheet settings")
-                .font(.largeTitle)
-            Button {
-                Task {
-                    await settingsVm.performTaskWithLoading {
-                        try await settingsVm.syncGoogleSpreadsheets()
-                    }
-                }
-                
-            } label: {
-                SpreadsheetSyncCard()
-            }
-            .padding()
+        ZStack {
+            LinearGradient(colors: [Color.purple.opacity(0.18), Color.blue.opacity(0.18)], startPoint: .topLeading, endPoint: .bottomTrailing)
+                .ignoresSafeArea(edges: .all)
             
-            NavigationLink {
-                SpreadsheetPickerView(viewModel: SpreadsheetPickerViewModel(selectionService: selectionService))
-            } label: {
-                FeatureCard(title: "Pick a Spreadsheet", subtitle: "Choose a Spreadsheet & Sheet to send the scanned information", systemImage: "document.on.document.fill", isPressed: true)
+            VStack(spacing: 15) {
+                Text("Spreadsheet settings")
+                    .font(.largeTitle)
+                Button {
+                    Task {
+                        await settingsVm.performTaskWithLoading {
+                            try await settingsVm.syncGoogleSpreadsheets()
+                        }
+                    }
+                    
+                } label: {
+                    SpreadsheetSyncCard()
+                }
+                .padding()
+                
+                NavigationLink {
+                    SpreadsheetPickerView(viewModel: SpreadsheetPickerViewModel(selectionService: selectionService))
+                } label: {
+                    FeatureCard(title: "Pick a Spreadsheet", subtitle: "Choose a Spreadsheet & Sheet to send the scanned information", systemImage: "document.on.document.fill", isPressed: true)
+                }
+                .padding()
+                Spacer()
             }
-            .padding()
-            Spacer()
+            .loadingOverlay(
+                $settingsVm.isLoading,
+                text: settingsVm.currentSheet,
+                symbols: ["document.on.document.fill", "document.viewfinder.fill", "document.badge.arrow.up.fill"])
+            .navigationBarBackButtonHidden(isLoadingPresented)
+            .errorAlert(error: $settingsVm.settingsError)
         }
-        .loadingOverlay(
-            $settingsVm.isLoading,
-            text: settingsVm.currentSheet,
-            symbols: ["document.on.document.fill", "document.viewfinder.fill", "document.badge.arrow.up.fill"])
-        .navigationBarBackButtonHidden(isLoadingPresented)
-        .errorAlert(error: $settingsVm.settingsError)
     }
 }
 

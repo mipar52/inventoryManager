@@ -15,24 +15,30 @@ struct SpreadsheetPickerView: View {
     @StateObject var viewModel: SpreadsheetPickerViewModel
     
     var body: some View {
-        VStack(spacing: 15) {
-            Text("Spreadsheet picker")
-                .font(.largeTitle)
-                .fontWeight(.bold)
+        ZStack {
+            LinearGradient(colors: [Color.purple.opacity(0.18), Color.blue.opacity(0.18)], startPoint: .topLeading, endPoint: .bottomTrailing)
+                .ignoresSafeArea(edges: .all)
             
-            List(spreadsheets, id: \.objectID) { spreadsheet in
-                NavigationLink {
-                    SheetPickerView(viewModel: viewModel, spreadsheet: spreadsheet)
-                } label: {
-                    Text((viewModel.selectedSpreadsheet == spreadsheet ? "\(spreadsheet.name ?? "Untitled spreadsheet") (selected)" : spreadsheet.name) ?? "Untitled spreadsheet")
-                        .fontWeight(viewModel.selectedSpreadsheet == spreadsheet ? .bold : .medium)
-                        .foregroundStyle(viewModel.selectedSpreadsheet == spreadsheet ? Color.purpleColor : .primary)
+            VStack(spacing: 15) {
+                Text("Spreadsheet picker")
+                    .font(.largeTitle)
+                    .fontWeight(.bold)
+                
+                List(spreadsheets, id: \.objectID) { spreadsheet in
+                    NavigationLink {
+                        SheetPickerView(viewModel: viewModel, spreadsheet: spreadsheet)
+                    } label: {
+                        Text((viewModel.selectedSpreadsheet == spreadsheet ? "\(spreadsheet.name ?? "Untitled spreadsheet") (selected)" : spreadsheet.name) ?? "Untitled spreadsheet")
+                            .fontWeight(viewModel.selectedSpreadsheet == spreadsheet ? .bold : .medium)
+                            .foregroundStyle(viewModel.selectedSpreadsheet == spreadsheet ? Color.purpleColor : .primary)
+                    }
                 }
-            }
-            
-            //        .navigationTitle(Text("Spreadsheet picker").font(.largeTitle))
-            .onAppear {
-                viewModel.loadSelection()
+                .scrollContentBackground(.hidden)
+                
+                //        .navigationTitle(Text("Spreadsheet picker").font(.largeTitle))
+                .onAppear {
+                    viewModel.loadSelection()
+                }
             }
         }
     }
