@@ -40,6 +40,10 @@ final class QRScannerService: NSObject, ObservableObject {
         }
 
     }
+    
+    func pauseSession() {
+        //session.
+    }
 
     func stopSession() {
         session.stopRunning()

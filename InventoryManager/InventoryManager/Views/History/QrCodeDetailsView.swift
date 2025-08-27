@@ -11,7 +11,6 @@ struct QrCodeDetailsView: View {
     
     @Environment(\.dismiss) var dismiss
     @StateObject var vm: ScanDetailsViewModel
-    let qrCodeData: QRCodeData
     
     @State private var isLoading: Bool = false
     @State private var isSuccess: Bool = false
@@ -29,33 +28,29 @@ struct QrCodeDetailsView: View {
                     .font(.largeTitle)
                     .fontWeight(.bold)
                 
-                    if let text = qrCodeData.stringData,
-                       let timestamp = qrCodeData.timestamp {
+
                         ScrollView {
                        // List {
-                            ForEach(text.components(separatedBy: .newlines), id: \.self) { data in
-                                QRCodeResultField(labelText: "Item", detailsText: data, symbolImage: "qrcode")
+                            if let stringData = vm.qrStringData,
+                               let timestamp = vm.item.timestamp {
+                                ForEach(stringData, id: \.self) { data in
+                                    QRCodeResultField(labelText: "Item", detailsText: data, symbolImage: "qrcode")
+                                }
+                                QRCodeResultField(labelText: "Scan taken", detailsText: timestamp.description, symbolImage: "calendar")
                             }
-                            QRCodeResultField(labelText: "Scan taken", detailsText: timestamp.description, symbolImage: "calendar")
                         }
                         .padding()
                        // .scrollContentBackground(.hidden)
-                        
-                    } else {
-                        EmptyStateView()
-                    }
+
             }
             .safeAreaInset(edge: .bottom, content: {
-                
-                    if let _ = qrCodeData.stringData,
-                       let _ = qrCodeData.timestamp {
                         VStack(spacing: 15) {
                             Button {
                                 Task {
                                     do {
                                         loadingMessage = "Sending to Sheet..\nHold on a sec.."
                                         isLoading.toggle()
-                                        try await vm.sendItem(item: qrCodeData)
+                                        try await vm.sendItem()
                                         isLoading.toggle()
                                     } catch {
                                         isLoading.toggle()
@@ -74,7 +69,7 @@ struct QrCodeDetailsView: View {
                             Button(role: .destructive) {
                                 Task {
                                     do {
-                                        try await vm.deleteItem(item: qrCodeData)
+                                        try await vm.deleteItem()
                                         dismiss()
                                     } catch {
                                         debugPrint(error.localizedDescription)
@@ -89,14 +84,13 @@ struct QrCodeDetailsView: View {
                             .tint(.red)
                         }
                         .padding()
-                    }
             })
             .loadingOverlay($isLoading, text: loadingMessage, symbols: ["paperplane.fill", "paperplane"])
             .alert(Text("Success"), isPresented: $isSuccess) {
                 Button(role: .destructive) {
                     Task {
                         do {
-                            try await vm.deleteItem(item: qrCodeData)
+                            try await vm.deleteItem()
                             dismiss()
                         } catch {
                             debugPrint(error.localizedDescription)

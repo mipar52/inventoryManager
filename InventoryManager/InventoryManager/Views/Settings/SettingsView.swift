@@ -83,7 +83,7 @@ struct SettingsView: View {
                         }
                         
                         NavigationLink {
-                            QrCodeSettingsView()
+                            QrCodeSettingsView(vm: QrCodeSettingsViewModel())
                         } label: {
                             FeatureCard(title: "QR Code settings", subtitle: "Customize which formats of QR codes will the application accept", systemImage: "qrcode", isPressed: true)
                         }

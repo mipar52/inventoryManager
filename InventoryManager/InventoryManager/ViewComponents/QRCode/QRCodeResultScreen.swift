@@ -20,10 +20,9 @@ struct QRCodeResultScreen: View {
                 .font(.headline)
                 .fontWeight(.bold)
             
-            if let result = viewModel.qrCodeResult {
-                let lines = result.components(separatedBy: .newlines).filter { !$0.isEmpty}
+            if let result = viewModel.qrCodeResult?.value {
                 ScrollView {
-                    ForEach(lines, id: \.self) { line in
+                    ForEach(result, id: \.self) { line in
                         QRCodeResultField(labelText: "Result", detailsText: line, symbolImage: "qrcode")
                     }
                 }
@@ -40,14 +39,9 @@ struct QRCodeResultScreen: View {
             VStack(spacing: 10) {
                 Button {
                     Task {
-                        do {
-                            try await viewModel.appendToSpreadsheet()
+                            await viewModel.appendToSpreadsheet()
                             viewModel.saveQrCodeData()
                             dismiss()
-                        } catch {
-                            errorMessage = error.localizedDescription
-                            showErrorToast.toggle()
-                        }
                     }
                 } label: {
                     Text("Send to Spreadsheet")

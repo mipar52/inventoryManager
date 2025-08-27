@@ -29,7 +29,7 @@ final class SpreadsheetPickerViewModel: ObservableObject {
     }
     
     func setSelection(with spreadsheet: String, sheet: String) {
-        self.selectionService.setSelectecion(spreadsheet, sheet)
+        self.selectionService.setSheetSelectecion(spreadsheet, sheet)
         loadSelection()
         debugPrint("Selected: \(selectionString)")
     }

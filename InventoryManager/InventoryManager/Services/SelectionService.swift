@@ -11,6 +11,10 @@ import CoreData
 
 @MainActor
 final class SelectionService: ObservableObject {
+    // google
+    @AppStorage(UserDefaultsConstants.isUserFirstTime) private var isUserFirstTime: Bool?
+    
+    // sheets
     @AppStorage(UserDefaultsConstants.selectedSpreadsheetId) private var selectedSpreadsheetId: String?
     @AppStorage(UserDefaultsConstants.selectedSheetId) private var selectedSheetId: String?
 
@@ -20,12 +24,12 @@ final class SelectionService: ObservableObject {
         self.context = dbService.container.viewContext
     }
     
-    func setSelectecion(_ spreadsheetId: String, _ sheetId: String) {
+    func setSheetSelectecion(_ spreadsheetId: String, _ sheetId: String) {
         selectedSpreadsheetId = spreadsheetId
         selectedSheetId = sheetId
     }
     
-    func clearSelection() {
+    func clearSheetSelection() {
         selectedSpreadsheetId = nil
         selectedSheetId = nil
     }
@@ -43,7 +47,7 @@ final class SelectionService: ObservableObject {
         let sheetId = selectedSheetId else { return nil }
         
         let request: NSFetchRequest<Sheet> = Sheet.fetchRequest()
-        request.predicate = NSPredicate(format: "sheetId == %@ AND spreadsheet.spreadsheetId == %@", sheetId, spreadsheetId)
+        request.predicate = NSPredicate(format: "name == %@ AND spreadsheet.spreadsheetId == %@", sheetId, spreadsheetId)
         request.fetchLimit = 1
         
         return try? context.fetch(request).first
@@ -51,7 +55,7 @@ final class SelectionService: ObservableObject {
     
     func validateSelection() {
         if getSelectedSpreadsheet() == nil {
-            clearSelection()
+            clearSheetSelection()
         } else if selectedSheetId != nil && getSelectedSheet() == nil {
             selectedSheetId = nil
         }

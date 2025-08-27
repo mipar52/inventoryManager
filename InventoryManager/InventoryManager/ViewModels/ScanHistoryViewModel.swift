@@ -12,9 +12,11 @@ final class ScanHistoryViewModel: ObservableObject {
     
     let sheetService: GoogleSpreadsheetService = GoogleSpreadsheetService()
     let db: DatabaseService
+    let qrCodeSettingsService: QrCodeSettingsStoreService
     
-    init(db: DatabaseService) {
+    init(db: DatabaseService, qrCodeSettingsService: QrCodeSettingsStoreService = QrCodeSettingsStoreService()) {
         self.db = db
+        self.qrCodeSettingsService = qrCodeSettingsService
     }
     
     func configure() async throws {
@@ -24,7 +26,11 @@ final class ScanHistoryViewModel: ObservableObject {
     func sendAllScans(items: [QRCodeData]) async throws {
         for item in items {
             if let text = item.stringData {
-                try await sheetService.appendDataToSheet(qrCodeData: text)
+                try await sheetService.appendDataToSheet(
+                    qrCodeData: text.components(separatedBy: qrCodeSettingsService.qrCodeDelimiter ?? ""),
+                    qrDelimiter: qrCodeSettingsService.qrCodeDelimiter,
+                    qrCodeWord: qrCodeSettingsService.qrAcceptanceText
+                )
             }
         }
     }

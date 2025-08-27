@@ -8,9 +8,8 @@
 import SwiftUI
 
 struct QrCodeSettingsView: View {
-    @State var delimiter: String = ""
-    @State var isOn: Bool = false
-    @State var isOnTwo: Bool = true
+    @StateObject var vm: QrCodeSettingsViewModel
+    
     var body: some View {
         NavigationView {
             ZStack {
@@ -18,18 +17,19 @@ struct QrCodeSettingsView: View {
                     .ignoresSafeArea(.all)
                 
                 ScrollView {
-                    SettingTextCard(symbol: "pencil", text: "QR Code delimiter", placeholderText: "':' or ';'", value: $delimiter)
-                    SettingSwitchCard(symbol: "checkmark.seal.text.page.fill", switchText: "Accept QR codes with specific text", isOn: $isOn)
-                    if isOn {
+                    SettingTextCard(symbol: "pencil", text: "QR Code delimiter", placeholderText: "':' or ';'", value: $vm.qrCodeDelimiter)
+                    SettingSwitchCard(symbol: "checkmark.seal.text.page.fill", switchText: "Accept QR codes with specific text", isOn: $vm.acceptQrWithSpecificText)
+                    
+                    if vm.acceptQrWithSpecificText {
                             Group {
-                                SettingTextCard(symbol: "character.cursor.ibeam", text: "QR Code acceptance text", placeholderText: "Apple", value: $delimiter)
-                                SettingSwitchCard(symbol: "x.circle", switchText: "Ignore the acceptance text from result", isOn: $isOnTwo)
+                                SettingTextCard(symbol: "character.cursor.ibeam", text: "QR Code acceptance text", placeholderText: "Apple", value: $vm.qrAcceptanceText)
+                                SettingSwitchCard(symbol: "x.circle", switchText: "Ignore the acceptance text from result", isOn: $vm.ignoreQrAcceptanceText)
                             }
                             .transition(.opacity.combined(with: .move(edge: .top)))
                             .padding(.top, 8)
                     }
                 }
-                .animation(.easeIn(duration: 0.2), value: isOn)
+                .animation(.easeIn(duration: 0.2), value: vm.acceptQrWithSpecificText)
                 .navigationTitle("QR code settings")
                 .navigationBarTitleDisplayMode(.large)
                 .padding()
@@ -39,5 +39,5 @@ struct QrCodeSettingsView: View {
 }
 
 #Preview {
-    QrCodeSettingsView()
+    QrCodeSettingsView(vm: QrCodeSettingsViewModel())
 }

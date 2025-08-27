@@ -15,9 +15,10 @@ struct ScanHistoryRow: View {
         NavigationLink {
             QrCodeDetailsView(
                 vm: ScanDetailsViewModel(
+                    qrCodeData: scannedItem,
                     sheetService: vm.sheetService,
-                    db: vm.db),
-                qrCodeData: scannedItem)
+                    db: vm.db)
+                )
         } label: {
             QRRow(item: scannedItem)
         }

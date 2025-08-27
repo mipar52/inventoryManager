@@ -9,20 +9,9 @@ import Foundation
 import SwiftUI
 
 final class QrCodeSettingsStoreService: ObservableObject {
-    private(set) var defaults: UserDefaults = .standard
     
-    @AppStorage(UserDefaultsConstants.qrCodeDelimiter) private(set) var qrCodeDelimiter: String?
-    @AppStorage(UserDefaultsConstants.acceptQrWithSpecificText) private(set) var acceptQrWithSpecificText: Bool?
-    @AppStorage(UserDefaultsConstants.qrAcceptanceText) private(set) var qrAcceptanceText: String?
-    @AppStorage(UserDefaultsConstants.ignoreQrAcceptanceText) private(set) var ignoreQrAcceptanceText: Bool?
-    
-    func setQrCodeDelimiter(_ delimiter: String?) {
-        qrCodeDelimiter = delimiter
-    }
-    func setAcceptQrWithSpecificText(_ accept: Bool?) {
-        acceptQrWithSpecificText = accept
-    }
-    func setQrAcceptanceText(_ text: String?) {
-        qrAcceptanceText = text
-    }
+    @AppStorage(UserDefaultsConstants.qrCodeDelimiter) var qrCodeDelimiter: String?
+    @AppStorage(UserDefaultsConstants.acceptQrWithSpecificText) var acceptQrWithSpecificText: Bool?
+    @AppStorage(UserDefaultsConstants.qrAcceptanceText) var qrAcceptanceText: String?
+    @AppStorage(UserDefaultsConstants.ignoreQrAcceptanceText) var ignoreQrAcceptanceText: Bool?
 }

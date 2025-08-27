@@ -33,9 +33,9 @@ struct PhotoPickerView: View {
                         Text("Send to sheets")
                     }
                     
-                    if let qrCodeResult = scannerViewModel.qrCodeResult {
-                        ToastView(labelText: qrCodeResult)
-                    }
+//                    if let qrCodeResult = scannerViewModel.qrCodeResult?.value {
+//                        ToastView(labelText: qrCodeResult)
+//                    }
                 }
             }
             
@@ -56,7 +56,7 @@ struct PhotoPickerView: View {
                 }
             }
         }
-        .sheet(isPresented: $scannerViewModel.showQrCodeResult) {
+        .sheet(isPresented: $scannerViewModel.isSuccess) {
             QRCodeResultScreen(viewModel: scannerViewModel)
                 .presentationDetents([.medium])
                 .presentationDragIndicator(.visible)

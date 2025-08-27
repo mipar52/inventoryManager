@@ -1,7 +1,0 @@
-- Create VM to QR settings
-    - connect with QR settings store
-
-- Create VM to scan settings
-    - connect with scan settings store
-
-- Connect settings options with Scanner screens

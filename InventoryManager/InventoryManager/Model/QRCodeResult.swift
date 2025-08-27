@@ -5,6 +5,9 @@
 //  Created by Milan Parađina on 03.08.2025..
 //
 
-struct QRCodeResult {
-    
+import Foundation
+
+struct QRCodeResult: Identifiable, Equatable {
+    let id = UUID()
+    let value: [String]
 }
