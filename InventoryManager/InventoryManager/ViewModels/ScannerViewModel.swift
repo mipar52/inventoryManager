@@ -9,115 +9,61 @@ import UIKit
 import AVFoundation
 import Combine
 
-// mock -> za testiranje npr. MocScannerVM: ScannerViewModelProtocol
-protocol ScannerViewModelProtocol {
-    func bindService()
-    
-}
-
-class ScannerVM: ScannerViewModelProtocol {
-    func bindService() {
+@MainActor
+final class ScannerViewModel: NSObject, ObservableObject {
         
-    }
-}
-
-class ScannerViewModel: NSObject, ObservableObject {
     @Published var qrCodeResult: QRCodeResult?
-    @Published var qrCodeScannerService: QRScannerService
-    @Published var flashlightPressed: Bool = false
-    //    @Published var qrCodeResult: String? = nil {
-    //        didSet {
-    //            isSuccess = qrCodeResult != nil
-    //        }
-    //    }
+    @Published var isFlashlightOn = false
+    @Published var uiError: UIScanningError?
     
-    @Published var isSuccess: Bool = false
-    @Published var selectedSpreadsheet: Spreadsheet?
-    @Published var selectedSheet: Sheet?
-    @Published var spreadsheets: [GoogleSpreadsheet]?
-    @Published var presentError: Bool = false
-    @Published var errorMessage: String = ""
-    @Published var presentQrError: Bool = false
-    
-    private var spreadsheetsService: GoogleSpreadsheetService
-    private(set) var dbService: DatabaseService?
-    
-    private let qrCodeSettingsService: QrCodeSettingsStoreService
-    private let scanSettingsService: ScanSettingsStoreService
-    
-    @Published var shouldPresentQrCodeResult: Bool = false
-    var isSucess: Bool { qrCodeResult != nil }
-    var shouldSaveDataOnDismiss: Bool {
-        scanSettingsService.saveDataOnDismiss ?? true
+    var shouldShowResultSheet: Bool {
+        qrCodeResult != nil && scanningSettings.showQrCodeScreen
     }
-    var shouldSaveDataOnError: Bool {
-        scanSettingsService.saveDataOnError ?? true
-    }
+    
+    // dependencies
+    private let scanner: QRScanning
+    private let sheets: GoogleSpreadsheetWriter
+    private let selection: SelectionProvider
+    private let qrSettings: QrSettingsProvider
+    private let scanningSettings: ScanSettingProvider
+    private let db: DatabaseProvider
+
     private var cancellables = Set<AnyCancellable>() // -> don't need it as assing is being used now
     
-    init(
-        qrCodeScannerService: QRScannerService = QRScannerService(),
-        googleSpreadsheetsService: GoogleSpreadsheetService = GoogleSpreadsheetService(),
-        qrcodeSettingService: QrCodeSettingsStoreService = QrCodeSettingsStoreService(),
-        scanSettingsSerive: ScanSettingsStoreService = ScanSettingsStoreService()
-    ) {
-        self.qrCodeScannerService = qrCodeScannerService
-        self.spreadsheetsService = googleSpreadsheetsService
-        self.qrCodeSettingsService = qrcodeSettingService
-        self.scanSettingsService = scanSettingsSerive
-        super.init()
-        self.bindService()
-        Task {
-            do {
-                try await spreadsheetsService.configure()
-            } catch {
-                presentError.toggle()
-                debugPrint(error.localizedDescription)
-            }
-        }
+    init(scanner: QRScanning,
+         sheets: GoogleSpreadsheetWriter,
+         selection: SelectionProvider,
+         qrSettings: QrSettingsProvider,
+         scanningSettings: ScanSettingProvider,
+         db: DatabaseProvider
+         ) {
+        self.scanner = scanner
+        self.sheets = sheets
+        self.selection = selection
+        self.qrSettings = qrSettings
+        self.scanningSettings = scanningSettings
+        self.db = db
+        
+        bindScanner()
+        Task { try? await sheets.configure() }
     }
     
-    private func bindService() {
-        
-        qrCodeScannerService.$scannedCode
+    private func bindScanner() {
+        scanner.scannedQrCodePublisher
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] qr in
-                guard let self = self else {return}
-                if let qr {
-                    debugPrint("[ScannerViewModel] - found QR code: \(qr)")
-                    var qrCodeResult: [String] = [qr]
-                    if let delimiter = qrCodeSettingsService.qrCodeDelimiter {
-                        qrCodeResult = qr.components(separatedBy: delimiter)
-                    }
-                    if let qrAcceptanceText = qrCodeSettingsService.qrAcceptanceText {
-                        if !(qrCodeResult.contains(qrAcceptanceText)) {
-                            errorMessage = "Invalid QR code!\nQR code does not contain \(qrAcceptanceText)"
-                            presentQrError.toggle()
-                            return
-                        }
-                        if let ignoreQrAcceptanceText = qrCodeSettingsService.ignoreQrAcceptanceText,
-                           let index = qrCodeResult.firstIndex(of: qrAcceptanceText) {
-                            if ignoreQrAcceptanceText {
-                                qrCodeResult.remove(at: index)
-                            }
-                        }
-                    }
-                    
-                    self.qrCodeResult = QRCodeResult(value: qrCodeResult)
-
-                    if let shouldPreset = scanSettingsService.showQrResultScreen,
-                       shouldPreset == true {
-                        shouldPresentQrCodeResult.toggle()
-                    } else {
-                        Task {
-                            await self.appendToSpreadsheet()
-                            self.isSuccess.toggle()
-                        }
-                        
-                    }
-                } else {
+            .sink { [weak self] rawQr in
+                guard let self = self else { return }
+                guard let rawQr, !rawQr.isEmpty else {
                     self.qrCodeResult = nil
+                    return
                 }
+                
+                let qrCodeSettings = QRCodeSettings(delimiter: qrSettings.qrCodeDelimiter,
+                                                    acceptanceText: qrSettings.qrAcceptanteText,
+                                                    ignoreAcceptanceText: qrSettings.ignoreQrAcceptanceText)
+                
+                //  parse
+                
             }
             .store(in: &cancellables)
         
@@ -136,55 +82,75 @@ class ScannerViewModel: NSObject, ObservableObject {
         
     }
     
+    private func parse(rawQr: String, using settings: QRCodeSettings) -> Result<[String], UIScanningError> {
+        
+        var parts: [String] = {
+            guard let delimiter = settings.delimiter, !delimiter.isEmpty else { return [rawQr] }
+        }()
+        
+        if let required = settings.acceptanceText, !required.isEmpty {
+            guard let index = parts.firstIndex(of: required) else {
+                return .failure(UIScanningError.invalidQrCode(missing: required))
+            }
+            if settings.ignoreAcceptanceText {
+                parts.remove(at: index)
+            }
+        }
+        
+        return .success(parts)
+    }
+    
+    func getPreviewLayer() -> AVCaptureVideoPreviewLayer {
+        scanner.getPreviewLayer()
+    }
+    
+    func startScanningSession() { scanner.startScanning() }
+    
+    func stopScanningSession() { scanner.stopScanning() }
+    
+    func toggleFlashlight() {
+        isFlashlightOn.toggle()
+        scanner.toggleFlashlight(status: isFlashlightOn)
+    }
+    
+    func decodeQrCode(from image: UIImage) { scanner.decodeQrCodeFromStaticImage(from: image) }
+    
+    
     func configureGoogleService(_ dbService: DatabaseService) async throws {
         try await self.spreadsheetsService.configure()
         self.dbService = dbService
     }
     
-    func appendToSpreadsheet() async {
+    func confirmAndAppendToSpreadsheet() async {
+        guard let parts = qrCodeResult?.value else { return }
+        Task { await appendToSpreadsheet(parts)}
+    }
+    
+    func appendToSpreadsheet(_ parts: [String]) async {
         do {
-            if let result = qrCodeResult {
-                try await self.spreadsheetsService.appendDataToSheet(
-                    qrCodeData: result.value,
-                    qrDelimiter: qrCodeSettingsService.qrCodeDelimiter,
-                    qrCodeWord: qrCodeSettingsService.qrAcceptanceText)
+            guard (selection.getSelectedSpreadsheet() != nil),
+            (selection.getSelectedSheet() != nil) else {
+                uiError = .generic(message: "Please select a spreadsheet and a sheet!")
+                return
             }
+            
+            try await sheets.appendDataToSheet(qrCodeData: parts)
+            // save?
+            qrCodeResult = nil
         } catch {
-            if error is QrError {
-                presentQrError.toggle()
-                errorMessage = error.localizedDescription
-            } else {
-                debugPrint(error.localizedDescription)
-                presentError.toggle()
-            }
+            uiError = .generic(message: error.localizedDescription)
         }
     }
+    
+    private func save(parts: [String]) async {
+        
+    }
+    
     
     @MainActor
     func saveQrCodeData() {
         if let result = qrCodeResult {
             dbService?.creatQrCodeData(with: result.value.joined(separator: qrCodeSettingsService.qrCodeDelimiter ?? ""), timestamp: Date())
         }
-    }
-    
-    func getPreviewLayer() -> AVCaptureVideoPreviewLayer {
-        qrCodeScannerService.getPreviewLayer()
-    }
-    
-    func startScanningSession() {
-        qrCodeScannerService.startSession()
-    }
-    
-    func stopScanningSession() {
-        qrCodeScannerService.stopSession()
-    }
-    
-    func toggleFlashlight() {
-        flashlightPressed.toggle()
-        qrCodeScannerService.toggleFlashlight(status: flashlightPressed)
-    }
-    
-    func decodeQrCode(from image: UIImage) {
-        qrCodeScannerService.decodeQRCodeFromStaticImage(from: image)
     }
 }

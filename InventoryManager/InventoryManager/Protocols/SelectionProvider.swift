@@ -8,9 +8,6 @@
 import Foundation
 
 protocol SelectionProvider {
-    var sheetId: String { get }
-    var spreadsheetId: String { get }
-    
-    func setSelection(spreadsheetId: String, sheetId: String)
-    func getSelection() -> (String, String)
+    func getSelectedSpreadsheet() -> Spreadsheet?
+    func getSelectedSheet() -> Sheet?
 }
