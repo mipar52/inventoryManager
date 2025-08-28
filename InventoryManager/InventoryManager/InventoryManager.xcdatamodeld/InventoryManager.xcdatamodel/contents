@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="23788.4" systemVersion="24F74" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+    <entity name="Item" representedClassName="Item" syncable="YES" codeGenerationType="class">
+        <attribute name="timestamp" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+    </entity>
+    <entity name="QRCodeData" representedClassName="QRCodeData" syncable="YES" codeGenerationType="class">
+        <attribute name="stringData" optional="YES" attributeType="String"/>
+        <attribute name="timestamp" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+    </entity>
+    <entity name="Sheet" representedClassName="Sheet" syncable="YES" codeGenerationType="class">
+        <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="name" optional="YES" attributeType="String"/>
+        <attribute name="sheetId" optional="YES" attributeType="String"/>
+        <relationship name="spreadsheet" maxCount="1" deletionRule="Nullify" destinationEntity="Spreadsheet" inverseName="sheets" inverseEntity="Spreadsheet"/>
+    </entity>
+    <entity name="Spreadsheet" representedClassName="Spreadsheet" syncable="YES" codeGenerationType="class">
+        <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="name" optional="YES" attributeType="String"/>
+        <attribute name="spreadsheetId" optional="YES" attributeType="String"/>
+        <relationship name="sheets" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Sheet" inverseName="spreadsheet" inverseEntity="Sheet"/>
+    </entity>
+</model>

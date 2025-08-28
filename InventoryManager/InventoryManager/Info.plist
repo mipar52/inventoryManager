@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>BUNDLE_ID</key>
+	<string>com.mipar52.InventoryManager</string>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>com.googleusercontent.apps.768663321407-7k3glle1mano4va2m6uognalphe4dp96</string>
+			</array>
+		</dict>
+	</array>
+	<key>GIDClientID</key>
+	<string>768663321407-7k3glle1mano4va2m6uognalphe4dp96.apps.googleusercontent.com</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>REVERSED_GIDClientID</key>
+	<string>com.googleusercontent.apps.768663321407-7k3glle1mano4va2m6uognalphe4dp96</string>
+</dict>
+</plist>
