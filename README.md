@@ -53,7 +53,7 @@ The project is structured according to **MVVM + Services + Protocol-oriented DI*
 
 ---
 
-## Modern iOS Concepts Used
+## iOS Concepts Used
 
 - **SwiftUI-first architecture**
   - `NavigationStack`, `.sheet(item:)`, `.alert(item:)`
