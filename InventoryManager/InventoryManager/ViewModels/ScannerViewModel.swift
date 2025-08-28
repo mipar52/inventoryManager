@@ -14,6 +14,7 @@ final class ScannerViewModel: NSObject, ObservableObject {
         
     @Published var qrCodeResult: QRCodeResult?
     @Published var isFlashlightOn = false
+    @Published var success = false
     @Published var uiError: UIScanningError?
     
     var shouldShowResultSheet: Bool {
@@ -43,13 +44,14 @@ final class ScannerViewModel: NSObject, ObservableObject {
         self.qrSettings = qrSettings
         self.scanningSettings = scanningSettings
         self.db = db
+        super.init()
         
-        bindScanner()
-        Task { try? await sheets.configure() }
+        self.bindScanner()
+        Task { try? await self.sheets.configure() }
     }
     
     private func bindScanner() {
-        scanner.scannedQrCodePublisher
+        scanner.scannedQrCodePublisher?
             .receive(on: DispatchQueue.main)
             .sink { [weak self] rawQr in
                 guard let self = self else { return }
@@ -60,9 +62,29 @@ final class ScannerViewModel: NSObject, ObservableObject {
                 
                 let qrCodeSettings = QRCodeSettings(delimiter: qrSettings.qrCodeDelimiter,
                                                     acceptanceText: qrSettings.qrAcceptanteText,
-                                                    ignoreAcceptanceText: qrSettings.ignoreQrAcceptanceText)
+                                                    ignoreAcceptanceText: qrSettings.ignoreQrAcceptanceText ?? false)
                 
                 //  parse
+                switch self.parse(rawQr: rawQr, using: qrCodeSettings) {
+                case .success(let parts):
+                    if self.scanningSettings.showQrCodeScreen {
+                        self.qrCodeResult = QRCodeResult(value: parts)
+                    } else {
+                        Task {
+                            await self.appendToSpreadsheet(parts)
+                            self.success.toggle()
+                        }
+                    }
+                    
+                case .failure(let uiError):
+                    self.qrCodeResult = nil
+                    self.uiError = uiError
+                    if self.scanningSettings.saveDataOnError {
+                        Task {
+                            await self.save(parts: [rawQr], delimiter: self.qrSettings.qrCodeDelimiter)
+                        }
+                    }
+                }
                 
             }
             .store(in: &cancellables)
@@ -86,6 +108,7 @@ final class ScannerViewModel: NSObject, ObservableObject {
         
         var parts: [String] = {
             guard let delimiter = settings.delimiter, !delimiter.isEmpty else { return [rawQr] }
+            return rawQr.components(separatedBy: delimiter)
         }()
         
         if let required = settings.acceptanceText, !required.isEmpty {
@@ -116,14 +139,20 @@ final class ScannerViewModel: NSObject, ObservableObject {
     func decodeQrCode(from image: UIImage) { scanner.decodeQrCodeFromStaticImage(from: image) }
     
     
-    func configureGoogleService(_ dbService: DatabaseService) async throws {
-        try await self.spreadsheetsService.configure()
-        self.dbService = dbService
+    func onSheetDismiss() {
+        if scanningSettings.saveDataOnDismiss {
+            if let parts = qrCodeResult?.value {
+                Task { await save(parts: parts, delimiter: qrSettings.qrCodeDelimiter) }
+            }
+        }
     }
     
     func confirmAndAppendToSpreadsheet() async {
         guard let parts = qrCodeResult?.value else { return }
-        Task { await appendToSpreadsheet(parts)}
+        Task {
+            await appendToSpreadsheet(parts)
+            success.toggle()
+        }
     }
     
     func appendToSpreadsheet(_ parts: [String]) async {
@@ -135,22 +164,14 @@ final class ScannerViewModel: NSObject, ObservableObject {
             }
             
             try await sheets.appendDataToSheet(qrCodeData: parts)
-            // save?
             qrCodeResult = nil
         } catch {
             uiError = .generic(message: error.localizedDescription)
         }
     }
     
-    private func save(parts: [String]) async {
-        
-    }
-    
-    
-    @MainActor
-    func saveQrCodeData() {
-        if let result = qrCodeResult {
-            dbService?.creatQrCodeData(with: result.value.joined(separator: qrCodeSettingsService.qrCodeDelimiter ?? ""), timestamp: Date())
-        }
+    private func save(parts: [String], delimiter: String?) async {
+        let text = parts.joined(separator: delimiter ?? "")
+        db.createQrCodeData(with: text, timestamp: Date())
     }
 }

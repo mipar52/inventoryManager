@@ -56,12 +56,15 @@ struct PhotoPickerView: View {
                 }
             }
         }
-        .sheet(isPresented: $scannerViewModel.isSuccess) {
+        
+        .sheet(item: $scannerViewModel.qrCodeResult, onDismiss: {
+            scannerViewModel.onSheetDismiss()
+        }, content: { _ in
             QRCodeResultScreen(viewModel: scannerViewModel)
                 .presentationDetents([.medium])
                 .presentationDragIndicator(.visible)
                 .padding()
-        }
+        })
     }
 }
 

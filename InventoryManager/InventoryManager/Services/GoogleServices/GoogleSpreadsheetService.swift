@@ -8,7 +8,8 @@
 import Foundation
 import GoogleAPIClientForREST_Sheets
 
-actor GoogleSpreadsheetService {
+actor GoogleSpreadsheetService: GoogleSpreadsheetWriter {
+    
     private(set) var sheetsService: GTLRSheetsService?
     func configure() async throws {
         do {
@@ -18,7 +19,7 @@ actor GoogleSpreadsheetService {
         }
     }
     
-    func appendDataToSheet(qrCodeData: [String], qrDelimiter: String?, qrCodeWord: String?) async throws {
+    func appendDataToSheet(qrCodeData: [String]) async throws {
         guard let sheetsService = sheetsService else { throw GoogleAuthError.NotSignedIn}
         guard let spreadsheetId = UserDefaults.standard.string(forKey: UserDefaultsConstants.selectedSpreadsheetId),
         let sheetId = UserDefaults.standard.string(forKey: UserDefaultsConstants.selectedSheetId) else
@@ -27,11 +28,6 @@ actor GoogleSpreadsheetService {
         
         let range = "\(sheetId)!A1:Q"
         let rangeToAppend = GTLRSheets_ValueRange.init();
-        if let qrCodeWord = qrCodeWord {
-            if qrCodeData.contains(qrCodeData) {
-                throw QrError.invalidQr(message: "Invalid QR code! Only QR codes containing word '\(qrCodeWord)' can be added to the spreadsheet!")
-            }
-        }
         rangeToAppend.values = [qrCodeData]
         
         let query = GTLRSheetsQuery_SpreadsheetsValuesAppend.query(withObject: rangeToAppend, spreadsheetId: spreadsheetId, range: range)

@@ -9,7 +9,8 @@ import CoreData
 import Foundation
 
 @MainActor
-final class DatabaseService: ObservableObject {
+final class DatabaseService: ObservableObject, DatabaseProvider {
+    
     let container: NSPersistentContainer
 
     init(inMemory: Bool = false) {
@@ -174,10 +175,10 @@ final class DatabaseService: ObservableObject {
         }
     }
     
-    func creatQrCodeData(with data: String, timestamp: Date) {
+    func createQrCodeData(with text: String, timestamp: Date) {
         performBackground { context in
             do {
-                let _ = try QRCodeData.getOrCreateData(with: timestamp, qrCodeData: data, context)
+                let _ = try QRCodeData.getOrCreateData(with: timestamp, qrCodeData: text, context)
             } catch {
                 debugPrint("[DBService] - error creating data: \(error.localizedDescription)")
             }

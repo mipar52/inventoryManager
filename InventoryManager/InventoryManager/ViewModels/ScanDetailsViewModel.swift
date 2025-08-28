@@ -31,9 +31,7 @@ final class ScanDetailsViewModel: ObservableObject {
     func sendItem() async throws {
         if let qrCodeData = item.stringData {
             try await sheetService.appendDataToSheet(
-                qrCodeData: qrCodeData.components(separatedBy: qrCodeSettingsService.qrCodeDelimiter ?? ""),
-                qrDelimiter: qrCodeSettingsService.qrCodeDelimiter,
-                qrCodeWord: qrCodeSettingsService.qrAcceptanceText
+                qrCodeData: qrCodeData.components(separatedBy: qrCodeSettingsService.qrCodeDelimiter ?? "")
             )
         }
     }

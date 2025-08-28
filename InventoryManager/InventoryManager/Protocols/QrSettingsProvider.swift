@@ -6,7 +6,8 @@
 //
 
 protocol QrSettingsProvider {
-    var qrCodeDelimiter: String? { get }
-    var qrAcceptanteText: String? { get }
-    var ignoreQrAcceptanceText: Bool { get }
+    var qrCodeDelimiter: String? { get set}
+    var qrAcceptanteText: String? { get set }
+    var ignoreQrAcceptanceText: Bool? { get set }
+    var acceptQrWithSpecificText: Bool? { get set }
 }

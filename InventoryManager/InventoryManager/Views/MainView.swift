@@ -14,7 +14,14 @@ struct MainView: View {
     var body: some View {
         TabView {
             Tab {
-                ScanPickerView(selectionService: selectionService)
+                ScanPickerView(
+                    selectionService: selectionService,
+                    scannerVM: ScannerViewModel(scanner: QRScannerService(),
+                                                sheets: GoogleSpreadsheetService(),
+                                                selection: selectionService,
+                                                qrSettings: QrCodeSettingsStoreService(),
+                                                scanningSettings: ScanSettingsStoreService(),
+                                                db: db))
             } label: {
                 TabLabelView(uiImageString: "barcode.viewfinder", labelString: "Scan")
             }

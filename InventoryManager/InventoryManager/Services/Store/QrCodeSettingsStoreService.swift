@@ -8,10 +8,40 @@
 import Foundation
 import SwiftUI
 
-final class QrCodeSettingsStoreService: ObservableObject {
+final class QrCodeSettingsStoreService: ObservableObject, QrSettingsProvider {
+    var qrCodeDelimiter: String? {
+        didSet {
+            qrCodeDelimiterUserDefault = qrCodeDelimiter
+        }
+    }
     
-    @AppStorage(UserDefaultsConstants.qrCodeDelimiter) var qrCodeDelimiter: String?
-    @AppStorage(UserDefaultsConstants.acceptQrWithSpecificText) var acceptQrWithSpecificText: Bool?
-    @AppStorage(UserDefaultsConstants.qrAcceptanceText) var qrAcceptanceText: String?
-    @AppStorage(UserDefaultsConstants.ignoreQrAcceptanceText) var ignoreQrAcceptanceText: Bool?
+    var qrAcceptanteText: String? {
+        didSet {
+            qrAcceptanceTextUserDefault = qrAcceptanteText
+        }
+    }
+    
+    var ignoreQrAcceptanceText: Bool? {
+        didSet {
+            ignoreQrAcceptanceTextUserDefault = ignoreQrAcceptanceText
+        }
+    }
+    
+    var acceptQrWithSpecificText: Bool? {
+        didSet {
+            acceptQrWithSpecificTextUserDefault = acceptQrWithSpecificText
+        }
+    }
+    
+    init() {
+        qrCodeDelimiter = qrCodeDelimiterUserDefault
+        qrAcceptanteText = qrAcceptanceTextUserDefault
+        ignoreQrAcceptanceText = ignoreQrAcceptanceTextUserDefault
+        acceptQrWithSpecificText = acceptQrWithSpecificTextUserDefault
+    }
+    
+    @AppStorage(UserDefaultsConstants.qrCodeDelimiter) private var qrCodeDelimiterUserDefault: String?
+    @AppStorage(UserDefaultsConstants.acceptQrWithSpecificText) private var acceptQrWithSpecificTextUserDefault: Bool?
+    @AppStorage(UserDefaultsConstants.qrAcceptanceText) private var qrAcceptanceTextUserDefault: String?
+    @AppStorage(UserDefaultsConstants.ignoreQrAcceptanceText) private var ignoreQrAcceptanceTextUserDefault: Bool?
 }

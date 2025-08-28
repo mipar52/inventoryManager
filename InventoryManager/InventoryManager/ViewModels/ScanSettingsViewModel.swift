@@ -24,7 +24,7 @@ final class ScanSettingsViewModel: ObservableObject {
     }
     @Published var showQrResultScreen: Bool {
         didSet {
-            scanSettingsService.showQrResultScreen = showQrResultScreen
+            scanSettingsService.showQrCodeScreen = showQrResultScreen
         }
     }
     
@@ -32,6 +32,6 @@ final class ScanSettingsViewModel: ObservableObject {
         self.scanSettingsService = scanSettingsService
         self.saveDataOnDismiss = scanSettingsService.saveDataOnDismiss ?? false
         self.saveDataOnError = scanSettingsService.saveDataOnError ?? true
-        self.showQrResultScreen = scanSettingsService.showQrResultScreen ?? true
+        self.showQrResultScreen = scanSettingsService.showQrCodeScreen ?? true
     }
 }

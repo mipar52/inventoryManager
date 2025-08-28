@@ -10,7 +10,7 @@ import SwiftUI
 import CoreData
 
 @MainActor
-final class SelectionService: ObservableObject {
+final class SelectionService: ObservableObject, SelectionProvider {
     // google
     @AppStorage(UserDefaultsConstants.isUserFirstTime) private var isUserFirstTime: Bool?
     

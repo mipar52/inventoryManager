@@ -27,9 +27,7 @@ final class ScanHistoryViewModel: ObservableObject {
         for item in items {
             if let text = item.stringData {
                 try await sheetService.appendDataToSheet(
-                    qrCodeData: text.components(separatedBy: qrCodeSettingsService.qrCodeDelimiter ?? ""),
-                    qrDelimiter: qrCodeSettingsService.qrCodeDelimiter,
-                    qrCodeWord: qrCodeSettingsService.qrAcceptanceText
+                    qrCodeData: text.components(separatedBy: qrCodeSettingsService.qrCodeDelimiter ?? "")
                 )
             }
         }

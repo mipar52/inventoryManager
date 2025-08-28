@@ -2,16 +2,18 @@ import SwiftUI
 
 struct ScanPickerView: View {
     @EnvironmentObject private var selectionService: SelectionService
-
-    @StateObject private var scannerVM = ScannerViewModel()
+    @EnvironmentObject private var db: DatabaseService
+    
+    @StateObject private var scannerVM: ScannerViewModel
     @StateObject private var spreadsheetVM: SpreadsheetPickerViewModel
 
     @State private var isLiveScanPressed = false
     @State private var isPhotoPressed    = false
     @State private var showTargetPicker  = false
 
-    init(selectionService: SelectionService) {
+    init(selectionService: SelectionService, scannerVM: ScannerViewModel) {
         _spreadsheetVM = StateObject(wrappedValue: SpreadsheetPickerViewModel(selectionService: selectionService))
+        _scannerVM = StateObject(wrappedValue: scannerVM)
     }
 
     var body: some View {

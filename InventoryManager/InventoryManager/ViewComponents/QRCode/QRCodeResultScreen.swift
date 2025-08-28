@@ -39,8 +39,7 @@ struct QRCodeResultScreen: View {
             VStack(spacing: 10) {
                 Button {
                     Task {
-                            await viewModel.appendToSpreadsheet()
-                            viewModel.saveQrCodeData()
+                            await viewModel.confirmAndAppendToSpreadsheet()
                             dismiss()
                     }
                 } label: {
@@ -63,17 +62,17 @@ struct QRCodeResultScreen: View {
             }
 
         }
-        .onAppear(perform: {
-            Task {
-                do {
-                    try await viewModel.configureGoogleService(db)
-                } catch {
-                    errorMessage = error.localizedDescription
-                    showErrorToast.toggle()
-                }
-            }
-
-        })
+//        .onAppear(perform: {
+//            Task {
+//                do {
+//                    try await viewModel.co(db)
+//                } catch {
+//                    errorMessage = error.localizedDescription
+//                    showErrorToast.toggle()
+//                }
+//            }
+//
+//        })
         .padding()
     }
 }

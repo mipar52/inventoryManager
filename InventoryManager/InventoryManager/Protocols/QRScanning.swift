@@ -10,7 +10,7 @@ import Combine
 import UIKit
 
 protocol QRScanning {
-    var scannedQrCodePublisher: AnyPublisher<String?, Never> { get }
+    var scannedQrCodePublisher: AnyPublisher<String?, Never>? { get }
     func startScanning()
     func stopScanning()
     func toggleFlashlight(status: Bool)

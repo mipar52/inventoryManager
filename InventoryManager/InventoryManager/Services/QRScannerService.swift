@@ -8,19 +8,27 @@
 import Foundation
 import AVFoundation
 import UIKit
+import Combine
 
-final class QRScannerService: NSObject, ObservableObject {
+final class QRScannerService: NSObject, ObservableObject, QRScanning {
+    
     private let session = AVCaptureSession()
     private let metadataOutput = AVCaptureMetadataOutput()
     
-    @Published var scannedCode: String?
+    private let scannedSubject = PassthroughSubject<String?, Never>()
+    var scannedQrCodePublisher: AnyPublisher<String?, Never>? {
+        scannedSubject.eraseToAnyPublisher()
+    }
     
-    func startSession() {
+    private var lastEmitted: String?
+    
+    func startScanning() {
         guard let videoDevice = AVCaptureDevice.default(for: .video),
               let videoInput = try? AVCaptureDeviceInput(device: videoDevice) else {
             debugPrint("[QRScannerService] - Failed to create camera input")
             return
         }
+        
         DispatchQueue.global(qos: .userInitiated).async { [weak self] in
             guard let self = self else { return }
             
@@ -38,16 +46,33 @@ final class QRScannerService: NSObject, ObservableObject {
             session.commitConfiguration()
             session.startRunning()
         }
-
+    }
+    
+    func stopScanning() {
+        session.stopRunning()
+    }
+    
+    func decodeQrCodeFromStaticImage(from image: UIImage) {
+        guard let ciImage = CIImage(image: image) else { return }
+        let context = CIContext()
+        let detector = CIDetector(ofType: CIDetectorTypeQRCode, context: context, options: nil)
+        if let features = detector?.features(in: ciImage),
+           let qrCodeFeatures = features.first as? CIQRCodeFeature,
+           let value = qrCodeFeatures.messageString {
+            DispatchQueue.main.async { [weak self] in
+                guard let self = self else { return }
+                if self.lastEmitted != value {
+                    self.lastEmitted = value
+                    self.scannedSubject.send(value)
+                }
+            }
+        }
     }
     
     func pauseSession() {
-        //session.
+        //todo -> don't stop the stream session
     }
 
-    func stopSession() {
-        session.stopRunning()
-    }
     
     func toggleFlashlight(status flaslightStatus: Bool) {
         guard let device = AVCaptureDevice.default(for: .video),
@@ -70,17 +95,6 @@ final class QRScannerService: NSObject, ObservableObject {
         layer.videoGravity = .resizeAspectFill
         return layer
     }
-    
-    /// Used for the image picker
-    func decodeQRCodeFromStaticImage(from image: UIImage) {
-        guard let ciImage = CIImage(image: image) else { return }
-        let context = CIContext()
-        let detector = CIDetector(ofType: CIDetectorTypeQRCode, context: context, options: nil)
-        if let features = detector?.features(in: ciImage),
-           let qrCodeFeatures = features.first as? CIQRCodeFeature {
-            scannedCode = qrCodeFeatures.messageString
-        }
-    }
 }
 
 extension QRScannerService: AVCaptureMetadataOutputObjectsDelegate {
@@ -90,7 +104,10 @@ extension QRScannerService: AVCaptureMetadataOutputObjectsDelegate {
         guard let object = metadataObjects.first as? AVMetadataMachineReadableCodeObject,
               let stringValue = object.stringValue else { return }
 
-        scannedCode = stringValue
-        stopSession()
+        if lastEmitted == stringValue { return }
+        lastEmitted = stringValue
+        scannedSubject.send(stringValue)
+        
+        stopScanning()
     }
 }

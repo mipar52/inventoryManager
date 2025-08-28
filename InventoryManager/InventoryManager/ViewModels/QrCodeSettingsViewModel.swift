@@ -9,7 +9,7 @@ import Foundation
 
 @MainActor
 final class QrCodeSettingsViewModel: ObservableObject {
-    private let qrCodeSettingsService: QrCodeSettingsStoreService
+    private var qrCodeSettingsService: QrSettingsProvider
 
     @Published var qrCodeDelimiter: String {
         didSet {
@@ -18,7 +18,7 @@ final class QrCodeSettingsViewModel: ObservableObject {
     }
     @Published var qrAcceptanceText: String {
         didSet {
-            qrCodeSettingsService.qrAcceptanceText = qrAcceptanceText
+            qrCodeSettingsService.qrAcceptanteText = qrAcceptanceText
         }
     }
     @Published var acceptQrWithSpecificText: Bool {
@@ -36,7 +36,7 @@ final class QrCodeSettingsViewModel: ObservableObject {
     init(qrCodeSettingsService: QrCodeSettingsStoreService = QrCodeSettingsStoreService()) {
         self.qrCodeSettingsService = qrCodeSettingsService
         self.qrCodeDelimiter = qrCodeSettingsService.qrCodeDelimiter ?? String()
-        self.qrAcceptanceText = qrCodeSettingsService.qrAcceptanceText ?? String()
+        self.qrAcceptanceText = qrCodeSettingsService.qrAcceptanteText ?? String()
         self.acceptQrWithSpecificText = qrCodeSettingsService.acceptQrWithSpecificText ?? false
         self.ignoreQrAcceptanceText = qrCodeSettingsService.ignoreQrAcceptanceText ?? false
     }
